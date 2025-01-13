@@ -1,0 +1,5 @@
+LIBRARY "Hub 4 Restored"
+
+EXPORTS
+TygerFrameworkPluginInitialize
+TygerFrameworkPluginRequiredVersion
