@@ -71,10 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ExternalIncludePath>Include</ExternalIncludePath>
+    <ExternalIncludePath>..\..\TygerMemory1\TygerMemory;Include</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ExternalIncludePath>Include</ExternalIncludePath>
+    <ExternalIncludePath>..\..\TygerMemory1\TygerMemory;Include</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <VcpkgUseStatic>true</VcpkgUseStatic>
@@ -99,6 +99,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ModuleDefinitionFile>Source.def</ModuleDefinitionFile>
+      <AdditionalDependencies>C:\Users\Kana\source\repos\Hub 4 Restored\Debug\TygerMemory.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(OutDir)$(ProjectName).dll" "D:\SteamLibrary\steamapps\common\TY the Tasmanian Tiger\Debug Plugins\$(ProjectName).dll"</Command>
@@ -168,16 +169,21 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="Include\TygerFrameworkAPI.h" />
     <ClInclude Include="Include\TygerFrameworkAPI.hpp" />
+    <ClInclude Include="LevelSelect.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PluginCore.h" />
+    <ClInclude Include="TyMemoryValues.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="LevelSelect.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PluginCore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def" />

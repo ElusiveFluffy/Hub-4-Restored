@@ -30,12 +30,27 @@
     <ClInclude Include="Include\TygerFrameworkAPI.hpp">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="PluginCore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TyMemoryValues.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelSelect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PluginCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelSelect.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,6 +1,8 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 #include "TygerFrameworkAPI.hpp"
+#include "core.h"
+#include "PluginCore.h"
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -30,6 +32,12 @@ EXTERN_C void TygerFrameworkPluginRequiredVersion(TygerFrameworkPluginVersion* v
 EXTERN_C bool TygerFrameworkPluginInitialize(TygerFrameworkPluginInitializeParam* param) {
 
     API::Initialize(param);
+
+    //Subcribe functions to TygerFramework events
+    API::AddOnTyInitialized(PluginCore::OnTyInitialized);
+    API::AddTickBeforeGame(PluginCore::Tick);
+
+    PluginCore::Setup();
 
     return true;
 }
