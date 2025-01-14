@@ -6,7 +6,7 @@
 
 //TygerMemory
 #include "core.h"
-#include "menu.h"
+#include "gamestate.h"
 
 bool PluginCore::Setup()
 {
@@ -22,6 +22,6 @@ void PluginCore::OnTyInitialized()
 
 void PluginCore::Tick(float deltaSeconds)
 {
-    if (Menu::GetPauseMenuType() == PauseMenu::LevelSelect)
+    if (GameState::getPauseMenuScreen() == PauseMenuScreen::ChangeLevel)
         LevelSelect::HandleInput();
 }
