@@ -4,7 +4,7 @@
 #include "WinUser.h"
 #include "LevelSelect.h"
 
-#include "core.h"
+//TygerMemory
 #include "sound.h"
 
 float xPosStart = 50.0f;
