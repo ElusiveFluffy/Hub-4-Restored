@@ -54,11 +54,11 @@ bool LeftOrRightStillDown;
 
 void LevelSelect::HandleInput()
 {
-	if (GetKeyState(VK_RIGHT) & 0x8000) {
+	if ((GetKeyState(VK_RIGHT) & 0x8000) || (GetKeyState('D') & 0x8000)) {
 		MoveSelectionHorizontally(true);
 		return;
 	}
-	if (GetKeyState(VK_LEFT) & 0x8000) {
+	if ((GetKeyState(VK_LEFT) & 0x8000) || (GetKeyState('A') & 0x8000)) {
 		MoveSelectionHorizontally(false);
 		return;
 	}
@@ -66,12 +66,14 @@ void LevelSelect::HandleInput()
 	XINPUT_STATE controllerState;
 	if (XInputGetState(0, &controllerState) == ERROR_SUCCESS)
 	{
-		//wButtons is a flag but it is probably impossible to press both left and right at the same time on most controllers
-		switch (controllerState.Gamepad.wButtons) {
-		case XINPUT_GAMEPAD_DPAD_RIGHT:
+		//Joystick is about 75% of the way out
+		if (controllerState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_RIGHT || controllerState.Gamepad.sThumbLX > 24575)
+		{
 			MoveSelectionHorizontally(true);
 			return;
-		case XINPUT_GAMEPAD_DPAD_LEFT:
+		}
+		if(controllerState.Gamepad.wButtons == XINPUT_GAMEPAD_DPAD_LEFT || controllerState.Gamepad.sThumbLX < -24575)
+		{
 			MoveSelectionHorizontally(false);
 			return;
 		}
