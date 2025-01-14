@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hub 4 Restored", "Hub 4 Restored\Hub 4 Restored.vcxproj", "{6556CF0E-4ED5-4175-B6B4-35BC0DF3D1C7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{668E5F94-8B23-4EBD-89E9-FB26DF6AF8BB} = {668E5F94-8B23-4EBD-89E9-FB26DF6AF8BB}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TygerMemory", "..\TygerMemory1\TygerMemory\TygerMemory.vcxproj", "{668E5F94-8B23-4EBD-89E9-FB26DF6AF8BB}"
 EndProject
