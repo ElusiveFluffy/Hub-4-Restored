@@ -4,6 +4,7 @@
 #include "PluginCore.h"
 #include "LevelSelect.h"
 
+//TygerMemory
 #include "core.h"
 #include "menu.h"
 
@@ -21,6 +22,6 @@ void PluginCore::OnTyInitialized()
 
 void PluginCore::Tick(float deltaSeconds)
 {
-    if (Menu::GetMenuIndex() == MenuType::LevelSelect)
+    if (Menu::GetPauseMenuType() == PauseMenu::LevelSelect)
         LevelSelect::HandleInput();
 }
