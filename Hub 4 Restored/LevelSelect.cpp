@@ -15,7 +15,7 @@ float HorizontalSpacing = 270.0f;
 void LevelSelect::SetupMultiColumn()
 {
 	//0x168 bytes per one
-	int UIButtonPosPtr = *(int*)((Core::moduleBase + 0x286cd8)) + 8;
+	int UIButtonPosPtr = GetButtonInfoStart() + 8;
 
 	float xPos = xPosStart;
 	float yPos = yPosStart; //+18 per row
@@ -85,9 +85,9 @@ void LevelSelect::MoveSelectionHorizontally(bool pressedRight)
 	if (LeftOrRightStillDown)
 		return;
 
-	int UIButtonPosPtr = GetButtonPosStart();
+	int UIButtonsPtr = GetButtonInfoStart();
 	//Old one
-	int currentSelectedPtr = UIButtonPosPtr + (0x168 * *GetSelectedLevelPtr());
+	int currentSelectedPtr = UIButtonsPtr + (0x168 * *GetSelectedLevelPtr());
 	*(int*)(currentSelectedPtr + 40) = GetTextDeselectedColour();
 	//Smoothly change size
 	*((int*)(currentSelectedPtr + 0x160)) = 0;
@@ -102,7 +102,7 @@ void LevelSelect::MoveSelectionHorizontally(bool pressedRight)
 		newLevelIndex = Wrap(*GetSelectedLevelPtr() - 8, 24);
 
 	*GetSelectedLevelPtr() = newLevelIndex;
-	currentSelectedPtr = UIButtonPosPtr + (0x168 * newLevelIndex);
+	currentSelectedPtr = UIButtonsPtr + (0x168 * newLevelIndex);
 	*(int*)(currentSelectedPtr + 40) = GetTextSelectedColour();
 	//Smoothly change size (do it for this one too, just in case, something the game does too)
 	*((int*)(currentSelectedPtr + 0x160)) = 0;
