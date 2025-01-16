@@ -92,7 +92,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -115,7 +115,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,15 +166,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Collectables.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Include\TygerFrameworkAPI.h" />
     <ClInclude Include="Include\TygerFrameworkAPI.hpp" />
     <ClInclude Include="LevelSelect.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PluginCore.h" />
+    <ClInclude Include="TyFunctions.h" />
     <ClInclude Include="TyMemoryValues.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Collectables.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="LevelSelect.cpp" />
     <ClCompile Include="pch.cpp">
@@ -184,6 +187,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PluginCore.cpp" />
+    <ClCompile Include="TyFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def" />

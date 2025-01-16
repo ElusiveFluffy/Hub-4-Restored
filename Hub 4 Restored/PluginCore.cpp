@@ -1,18 +1,36 @@
 #include "pch.h"
 #include "TygerFrameworkAPI.hpp"
 #include "TyMemoryValues.h"
+#include "TyFunctions.h"
 #include "PluginCore.h"
 #include "LevelSelect.h"
+#include "Collectables.h"
+
+#include "MinHook.h"
 
 //TygerMemory
 #include "core.h"
 #include "minimap.h"
 #include "gamestate.h"
 
+void InitMinHook() {
+    MH_STATUS minHookStatus = MH_Initialize();
+    if (minHookStatus != MH_OK) {
+        std::string error = MH_StatusToString(minHookStatus);
+        API::LogPluginMessage("Failed to Initialize Minhook, With the Error: " + error, Error);
+    }
+}
+
 bool PluginCore::Setup()
 {
     Core::initialize((HMODULE)API::Get()->param()->TyHModule);
+
+    InitMinHook();
+
     TyMemoryValues::DisableGameInfoID(LevelCode::E3);
+    TyFunctions::SetFuntions();
+
+    Collectables::Setup();
     return true;
 }
 
