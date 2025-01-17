@@ -101,5 +101,6 @@ void Collectables::Setup()
 	SetEarthThunderEggParticle();
 	SetLevelInfo();
 	SetFullGameTotals();
+	Totals::SetGameInfoLevels(GameInfoLevelIndexes, std::size(GameInfoLevelIndexes));
 	HookGameTotalsFunction();
 }
