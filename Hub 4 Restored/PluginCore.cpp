@@ -5,6 +5,7 @@
 #include "PluginCore.h"
 #include "LevelSelect.h"
 #include "Collectables.h"
+#include "Levels.h"
 
 #include "MinHook.h"
 
@@ -12,6 +13,7 @@
 #include "core.h"
 #include "minimap.h"
 #include "gamestate.h"
+#include "hero.h"
 
 void InitMinHook() {
     MH_STATUS minHookStatus = MH_Initialize();
@@ -31,6 +33,8 @@ bool PluginCore::Setup()
     TyFunctions::SetFuntions();
 
     Collectables::Setup();
+    Levels::HookFunctions();
+
     return true;
 }
 

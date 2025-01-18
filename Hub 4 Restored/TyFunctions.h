@@ -11,5 +11,8 @@ namespace TyFunctions {
 	typedef int(__fastcall* CalculateCompletion_t)();
 	inline CalculateCompletion_t Original_CalculateCompletion;
 
+	typedef void(*VoidFunction_t)();
+	inline VoidFunction_t Original_OneOfTheLoadFunctions;
+
 	void SetFuntions();
 }
