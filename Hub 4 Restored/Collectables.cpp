@@ -76,9 +76,32 @@ int TotalsCountDLevels() {
 	return result;
 }
 
-void HookGameTotalsFunction() {
+int __fastcall CalculateCompletion(void* contextMaybe) {
+
+	int collectableCount = 0;
+
+	collectableCount += Totals::getCurrentTalismanCount();
+	collectableCount += Totals::getCurrentCogCount(Global);
+	collectableCount += Totals::getCurrentThunderEggCount(Global);
+
+	int completionPercent = (collectableCount * 100) / 185;
+
+	//Same fail safe as the game has
+	if (completionPercent > 100)
+		completionPercent = 100;
+
+	return completionPercent;
+}
+
+void HookGameTotalsFunctions() {
 	//Hook Ty Shutdown Function
 	MH_STATUS minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0xE7530), &TotalsCountDLevels, reinterpret_cast<LPVOID*>(&TyFunctions::Original_SetUpFullGameTotals));
+	if (minHookStatus != MH_OK) {
+		std::string error = MH_StatusToString(minHookStatus);
+		API::LogPluginMessage("Failed to Create the Game Totals Function Hook, With the Error: " + error, Error);
+		return;
+	}
+	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0xf7200), &CalculateCompletion, reinterpret_cast<LPVOID*>(&TyFunctions::Original_CalculateCompletion));
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
 		API::LogPluginMessage("Failed to Create the Game Totals Function Hook, With the Error: " + error, Error);
@@ -102,5 +125,5 @@ void Collectables::Setup()
 	SetLevelInfo();
 	SetFullGameTotals();
 	Totals::SetGameInfoLevels(GameInfoLevelIndexes, std::size(GameInfoLevelIndexes));
-	HookGameTotalsFunction();
+	HookGameTotalsFunctions();
 }
