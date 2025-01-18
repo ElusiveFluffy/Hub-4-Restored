@@ -104,7 +104,7 @@ void HookGameTotalsFunctions() {
 	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0xf7200), &CalculateCompletion, reinterpret_cast<LPVOID*>(&TyFunctions::Original_CalculateCompletion));
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
-		API::LogPluginMessage("Failed to Create the Game Totals Function Hook, With the Error: " + error, Error);
+		API::LogPluginMessage("Failed to Create the Calculate Completion Function Hook, With the Error: " + error, Error);
 		return;
 	}
 
