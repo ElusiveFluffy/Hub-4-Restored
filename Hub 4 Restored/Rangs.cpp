@@ -91,7 +91,6 @@ void RedirectRangModelAndSoundData() {
 	memcpy(NameAndSounds, (Rangs::RangNameAndSoundData*)(Core::moduleBase + 0x253668), sizeof(Rangs::RangNameAndSoundData) * Rangs::RangCount);
 
 	memcpy(NameAndSounds + Rangs::RangCount - 1, &Rangs::ExtraRangNameAndSounds, sizeof(Rangs::RangNameAndSoundData));
-	memcpy(NameAndSounds + 1, &Rangs::ExtraRangNameAndSounds, sizeof(Rangs::RangNameAndSoundData));
 
 	//Replace the pointers for it
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c4ea), &NameAndSounds, 4);
