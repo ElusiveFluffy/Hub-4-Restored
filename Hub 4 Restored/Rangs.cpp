@@ -46,14 +46,14 @@ void Rangs::HookCycleFunctions()
 	MH_STATUS minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x3c920), &CycleForward, reinterpret_cast<LPVOID*>(&Original_CycleForward));
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
-		API::LogPluginMessage("Failed to Create One of the Load Funtion Hook, With the Error: " + error, Error);
+		API::LogPluginMessage("Failed to Create Rang Cycle Forward Function Hook, With the Error: " + error, Error);
 		return;
 	}
 
 	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x3c9c0), &CycleBackward, reinterpret_cast<LPVOID*>(&Original_CycleBackward));
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
-		API::LogPluginMessage("Failed to Create One of the Load Funtion Hook, With the Error: " + error, Error);
+		API::LogPluginMessage("Failed to Create Rang Cycle Backward Function Hook, With the Error: " + error, Error);
 		return;
 	}
 
@@ -61,7 +61,7 @@ void Rangs::HookCycleFunctions()
 	minHookStatus = MH_EnableHook(MH_ALL_HOOKS);
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
-		API::LogPluginMessage("Failed to One of the Load Functions, With the Error: " + error, Error);
+		API::LogPluginMessage("Failed to Enable the Rang Cycle Function Hooks, With the Error: " + error, Error);
 		return;
 	}
 }
@@ -91,6 +91,7 @@ void RedirectRangModelAndSoundData() {
 	memcpy(NameAndSounds, (Rangs::RangNameAndSoundData*)(Core::moduleBase + 0x253668), sizeof(Rangs::RangNameAndSoundData) * Rangs::RangCount);
 
 	memcpy(NameAndSounds + Rangs::RangCount - 1, &Rangs::ExtraRangNameAndSounds, sizeof(Rangs::RangNameAndSoundData));
+	memcpy(NameAndSounds + 1, &Rangs::ExtraRangNameAndSounds, sizeof(Rangs::RangNameAndSoundData));
 
 	//Replace the pointers for it
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c4ea), &NameAndSounds, 4);
