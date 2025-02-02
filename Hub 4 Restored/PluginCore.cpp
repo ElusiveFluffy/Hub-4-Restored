@@ -6,6 +6,7 @@
 #include "LevelSelect.h"
 #include "Collectables.h"
 #include "Levels.h"
+#include "Rangs.h"
 
 #include "MinHook.h"
 
@@ -25,8 +26,6 @@ void InitMinHook() {
 
 bool PluginCore::Setup()
 {
-    Core::initialize((HMODULE)API::Get()->param()->TyHModule);
-
     InitMinHook();
 
     TyMemoryValues::DisableGameInfoID(LevelCode::E3);
@@ -35,7 +34,15 @@ bool PluginCore::Setup()
     Collectables::Setup();
     Levels::HookFunctions();
 
+    Rangs::HookCycleFunctions();
+
     return true;
+}
+
+void PluginCore::EarlyInit()
+{
+    Core::initialize((HMODULE)GetModuleHandle(0));
+    Rangs::SetupRangStructs();
 }
 
 void PluginCore::OnTyInitialized()

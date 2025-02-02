@@ -3,6 +3,7 @@
 #include "Xinput.h"
 #include "WinUser.h"
 #include "LevelSelect.h"
+#include "NumUtil.h"
 
 //TygerMemory
 #include "sound.h"
@@ -37,16 +38,6 @@ void LevelSelect::SetupMultiColumn()
 
 		UIButtonPosPtr += 0x168;
 	}
-}
-
-int Wrap(int const currentValue, int const upperBound)
-{
-	int range = upperBound;
-	int wrappedValue = (currentValue % range);
-	if (wrappedValue < 0)
-		return upperBound + wrappedValue;
-	else
-		return wrappedValue;
 }
 
 //Makes it so it won't change option every frame
@@ -99,9 +90,9 @@ void LevelSelect::MoveSelectionHorizontally(bool pressedRight)
 	//New one
 	int newLevelIndex = 0;
 	if (pressedRight)
-		newLevelIndex = Wrap(*GetSelectedLevelPtr() + 8, 24);
+		newLevelIndex = NumUtil::Wrap(*GetSelectedLevelPtr() + 8, 24);
 	else
-		newLevelIndex = Wrap(*GetSelectedLevelPtr() - 8, 24);
+		newLevelIndex = NumUtil::Wrap(*GetSelectedLevelPtr() - 8, 24);
 
 	*GetSelectedLevelPtr() = newLevelIndex;
 	currentSelectedPtr = UIButtonsPtr + (0x168 * newLevelIndex);
