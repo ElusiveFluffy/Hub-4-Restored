@@ -12,7 +12,7 @@
 #include "savedata.h"
 
 void SetEarthThunderEggParticle() {
-	Collectable::GetThunderEggParticleColours()[Element::Earth] = FloatRGBA{ 0.8f, 0.8f, 0.0f, 1.0f };
+	Collectable::GetThunderEggParticleColours()[Element::Earth] = RGBA{ 0.8f, 0.8f, 0.0f, 1.0f };
 	API::LogPluginMessage("Set Earth Thunder Egg Particle Colours");
 }
 
