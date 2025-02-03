@@ -88,7 +88,7 @@ Rangs::RangNameAndSoundData* NameAndSounds;
 
 void RedirectRangModelAndSoundData() {
 	NameAndSounds = new Rangs::RangNameAndSoundData[Rangs::RangCount];
-	memcpy(NameAndSounds, (Rangs::RangNameAndSoundData*)(Core::moduleBase + 0x253668), sizeof(Rangs::RangNameAndSoundData) * Rangs::RangCount);
+	memcpy(NameAndSounds, (Rangs::RangNameAndSoundData*)(Core::moduleBase + 0x253668), sizeof(Rangs::RangNameAndSoundData) * Rangs::OriginalRangCount);
 
 	memcpy(NameAndSounds + Rangs::RangCount - 1, &Rangs::ExtraRangNameAndSounds, sizeof(Rangs::RangNameAndSoundData));
 
@@ -133,6 +133,52 @@ void RedirectRangDataPointers() {
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c5e3), &dataPointers, 4);
 }
 
+Rangs::RangGlowEffectParam* RangGlowArray;
+//Stops any rendering bugs with the extra rangs, like everything turning black
+void RedirectRangGlowArray() {
+	RangGlowArray = new Rangs::RangGlowEffectParam[Rangs::RangCount];
+
+	int rangGlowParamSize = sizeof(Rangs::RangGlowEffectParam);
+	//Make sure its all 0
+	memset(RangGlowArray, 0, rangGlowParamSize * Rangs::RangCount);
+
+	memcpy(RangGlowArray, (Rangs::RangGlowEffectParam*)(Core::moduleBase + 0x2708e8), rangGlowParamSize * Rangs::OriginalRangCount);
+
+	int dataPointer = (int)&RangGlowArray->HasGlow;
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x16373e), &dataPointer, 4);
+	//From a completely different function
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x16aaaf), &dataPointer, 4);
+
+	dataPointer = (int)&RangGlowArray->TyGlowColour.R;
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x163f22), &dataPointer, 4);
+	dataPointer = (int)&RangGlowArray->TyGlowColour.G;
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x163f33), &dataPointer, 4);
+	dataPointer = (int)&RangGlowArray->TyGlowColour.B;
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x163f40), &dataPointer, 4);
+
+	dataPointer = (int)&RangGlowArray->PulseChangeRate;
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x163f6f), &dataPointer, 4);
+
+	dataPointer = (int)&RangGlowArray->GroundGlowFalloff;
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x164258), &dataPointer, 4);
+
+	dataPointer = (int)&RangGlowArray->GroundGlowColour.R;
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x16424b), &dataPointer, 4);
+	dataPointer = (int)&RangGlowArray->GroundGlowColour.G;
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x164267), &dataPointer, 4);
+	dataPointer = (int)&RangGlowArray->GroundGlowColour.B;
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x164284), &dataPointer, 4);
+
+	dataPointer = (int)&RangGlowArray->EntireLvlGlowIntensity;
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x164290), &dataPointer, 4);
+
+	dataPointer = (int)&RangGlowArray->GroundGlowIntensity;
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x1642a2), &dataPointer, 4);
+
+	dataPointer = (int)&RangGlowArray->GroundGlowRadius;
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x1642bb), &dataPointer, 4);
+}
+
 void SetRangCycleOrder() {
 	int customCyleOrderPtr = (int)&Rangs::CycleOrder;
 
@@ -166,5 +212,6 @@ void Rangs::SetupRangStructs()
 	SetRangCycleOrder();
 
 	RedirectRangDataPointers();
+	RedirectRangGlowArray();
 	RedirectRangModelAndSoundData();
 }

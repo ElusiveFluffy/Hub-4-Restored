@@ -1,5 +1,6 @@
 #pragma once
 #include "sound.h"
+#include "colour.h"
 
 namespace Rangs
 {
@@ -72,6 +73,21 @@ namespace Rangs
 		float DoomerangTurnSpeed;
 		float DoomerangSpeed;
 	};
+
+	struct RangGlowEffectParam
+	{
+		BOOL HasGlow;
+		float PulseChangeRate;
+		RGB TyGlowColour;
+		RGB GroundGlowColour;
+		float EntireLvlGlowIntensity;
+		float GroundGlowIntensity;
+		float GroundGlowFalloff;
+		float GroundGlowRadius;
+	};
+
+	//Don't edit this one
+	inline const int OriginalRangCount = 12;
 
 	inline constexpr int RangCount = 13;
 	inline Boomerangs CycleOrder[] = {Boomerang, Flamerang, Frostyrang, Smasharang, Zappyrang, Zoomerang, Multirang, Infrarang, Megarang, Kaboomerang, Chronorang, Doomerang, Aquarang};
