@@ -166,6 +166,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CustomTyDev.h" />
     <ClInclude Include="NumUtil.h" />
     <ClInclude Include="Collectables.h" />
     <ClInclude Include="framework.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="TyMemoryValues.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CustomTyDev.cpp" />
     <ClCompile Include="NumUtil.cpp" />
     <ClCompile Include="Collectables.cpp" />
     <ClCompile Include="dllmain.cpp" />

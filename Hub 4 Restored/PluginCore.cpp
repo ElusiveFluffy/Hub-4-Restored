@@ -7,6 +7,7 @@
 #include "Collectables.h"
 #include "Levels.h"
 #include "Rangs.h"
+#include "CustomTyDev.h"
 
 #include "MinHook.h"
 
@@ -33,6 +34,8 @@ bool PluginCore::Setup()
 
     Collectables::Setup();
     Levels::HookFunctions();
+
+    CustomTyDev::OverrideTyDev();
 
     Rangs::HookCycleFunctions();
 
