@@ -76,10 +76,10 @@ Rangs::RangNameAndSoundData Rangs::ExtraRangNameAndSounds[] = {
 		0,
 		0x2e,
 		0x38,
-		TyRangStdThrow,
-		TyRangStdCatch,
-		TyRangStdDeflect,
-		TyRangStdHit,
+		TyRangSmashThrow,
+		TyRangSmashCatch,
+		TyRangSmashDeflect,
+		TyRangSmashHit,
 		TyJump
 	},
 };
