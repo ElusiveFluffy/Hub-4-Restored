@@ -9,8 +9,6 @@
 #include "savedata.h"
 
 typedef Rangs::Boomerangs(*RangCycleFunction_t)(Rangs::Boomerangs currentRang);
-RangCycleFunction_t Original_CycleForward;
-RangCycleFunction_t Original_CycleBackward;
 
 Rangs::Boomerangs CycleForward(Rangs::Boomerangs currentRang) {
 	SaveDataStruct* saveFile = SaveData::GetData();
@@ -43,14 +41,14 @@ Rangs::Boomerangs CycleBackward(Rangs::Boomerangs currentRang) {
 
 void Rangs::HookCycleFunctions()
 {
-	MH_STATUS minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x3c920), &CycleForward, reinterpret_cast<LPVOID*>(&Original_CycleForward));
+	MH_STATUS minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x3c920), &CycleForward, nullptr);
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
 		API::LogPluginMessage("Failed to Create Rang Cycle Forward Function Hook, With the Error: " + error, Error);
 		return;
 	}
 
-	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x3c9c0), &CycleBackward, reinterpret_cast<LPVOID*>(&Original_CycleBackward));
+	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x3c9c0), &CycleBackward, nullptr);
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
 		API::LogPluginMessage("Failed to Create Rang Cycle Backward Function Hook, With the Error: " + error, Error);
