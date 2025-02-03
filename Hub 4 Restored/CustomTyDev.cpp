@@ -29,6 +29,7 @@ bool __fastcall CustomTyDev::SetSaveFileData(int arg1)
 	saveData->AttributeData.GotChronorang = true;
 	saveData->AttributeData.GotDoomerang = true;
 
+	//Temporary for the smasharang
 	saveData->Talismans[0] = true;
 
 	return isTyDev;
