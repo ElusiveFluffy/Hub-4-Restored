@@ -3,13 +3,13 @@
 #include "MinHook.h"
 #include "TygerFrameworkAPI.hpp"
 #include "TyFunctions.h"
+#include "SaveFile.h"
 
 //TygerMemory
 #include "collectable.h"
 #include "level.h"
 #include "core.h"
 #include "totals.h"
-#include "savedata.h"
 
 void SetEarthThunderEggParticle() {
 	Collectable::GetThunderEggParticleColours()[Element::Earth] = RGBA{ 0.8f, 0.8f, 0.0f, 1.0f };
@@ -54,7 +54,7 @@ int TotalsCountDLevels() {
 	// so that I don't need to redo counting the levels that already have their opals counted
 	int result = TyFunctions::Original_SetUpFullGameTotals();
 
-	SaveDataStruct* saveData = SaveData::GetData();
+	Hub4SaveDataStruct* saveData = SaveFile::GetHub4SaveData();
 	int* TotalCollectedOpals = (int*)(Core::moduleBase + 0x261878);
 
 	// Checks if you've collected the 300 opal thunder egg (since the opals bits get reset after doing that)
@@ -76,11 +76,16 @@ int TotalsCountDLevels() {
 	return result;
 }
 
+int GetTalismanCount() {
+	Hub4SaveDataStruct* saveData = SaveFile::GetHub4SaveData();
+	return std::count(saveData->Talismans, saveData->Talismans + 5, true);
+}
+
 int __fastcall CalculateCompletion(void* contextMaybe) {
 
 	int collectableCount = 0;
 
-	collectableCount += Totals::getCurrentTalismanCount();
+	collectableCount += GetTalismanCount();
 	collectableCount += Totals::getCurrentCogCount(Global);
 	collectableCount += Totals::getCurrentThunderEggCount(Global);
 

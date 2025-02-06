@@ -177,6 +177,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PluginCore.h" />
     <ClInclude Include="Rangs.h" />
+    <ClInclude Include="SaveFile.h" />
     <ClInclude Include="TyFunctions.h" />
     <ClInclude Include="TyMemoryValues.h" />
   </ItemGroup>
@@ -195,6 +196,7 @@
     </ClCompile>
     <ClCompile Include="PluginCore.cpp" />
     <ClCompile Include="Rangs.cpp" />
+    <ClCompile Include="SaveFile.cpp" />
     <ClCompile Include="TyFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>

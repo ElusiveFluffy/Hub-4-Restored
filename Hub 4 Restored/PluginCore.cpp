@@ -6,6 +6,7 @@
 #include "LevelSelect.h"
 #include "Collectables.h"
 #include "Levels.h"
+#include "SaveFile.h"
 #include "Rangs.h"
 #include "CustomTyDev.h"
 
@@ -46,6 +47,8 @@ void PluginCore::EarlyInit()
 {
     Core::initialize((HMODULE)GetModuleHandle(0));
     Rangs::SetupRangStructs();
+
+    SaveFile::SaveFileInit();
 }
 
 void PluginCore::OnTyInitialized()

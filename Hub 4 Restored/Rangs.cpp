@@ -3,15 +3,15 @@
 #include "MinHook.h"
 #include "TygerFrameworkAPI.hpp"
 #include "NumUtil.h"
+#include "SaveFile.h"
 
 //TygerMemory
 #include "core.h"
-#include "savedata.h"
 
 typedef Rangs::Boomerangs(*RangCycleFunction_t)(Rangs::Boomerangs currentRang);
 
 Rangs::Boomerangs CycleForward(Rangs::Boomerangs currentRang) {
-	SaveDataStruct* saveFile = SaveData::GetData();
+	Hub4SaveDataStruct* saveFile = SaveFile::GetHub4SaveData();
 
 	int index = std::distance(Rangs::CycleOrder, std::find(std::begin(Rangs::CycleOrder), std::end(Rangs::CycleOrder), currentRang));
 	Rangs::Boomerangs nextRang = Rangs::Boomerang;
@@ -25,7 +25,7 @@ Rangs::Boomerangs CycleForward(Rangs::Boomerangs currentRang) {
 	return nextRang;
 }
 Rangs::Boomerangs CycleBackward(Rangs::Boomerangs currentRang) {
-	SaveDataStruct* saveFile = SaveData::GetData();
+	Hub4SaveDataStruct* saveFile = SaveFile::GetHub4SaveData();
 
 	int index = std::distance(Rangs::CycleOrder, std::find(std::begin(Rangs::CycleOrder), std::end(Rangs::CycleOrder), currentRang));
 	Rangs::Boomerangs previousRang = Rangs::Boomerang;

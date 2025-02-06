@@ -2,10 +2,10 @@
 #include "CustomTyDev.h"
 #include "MinHook.h"
 #include "TyFunctions.h"
+#include "SaveFile.h"
 
 //Tyger Memory
 #include "core.h"
-#include "savedata.h"
 
 typedef bool(__fastcall* SetSaveFileData_t)(int arg1);
 SetSaveFileData_t Original_SetSaveFileData;
@@ -18,7 +18,7 @@ bool __fastcall CustomTyDev::SetSaveFileData(int arg1)
 		return isTyDev;
 
 	//Additional save file edits
-	SaveDataStruct* saveData = SaveData::GetData();
+	Hub4SaveDataStruct* saveData = SaveFile::GetHub4SaveData();
 	saveData->AttributeData.GotAquarang = true;
 	saveData->AttributeData.GotZappyrang = true;
 	saveData->AttributeData.GotZoomerang = true;
@@ -28,9 +28,7 @@ bool __fastcall CustomTyDev::SetSaveFileData(int arg1)
 	saveData->AttributeData.GotKaboomerang = true;
 	saveData->AttributeData.GotChronorang = true;
 	saveData->AttributeData.GotDoomerang = true;
-
-	//Temporary for the smasharang
-	saveData->Talismans[0] = true;
+	saveData->AttributeData.GotSmasharang = true;
 
 	return isTyDev;
 }
