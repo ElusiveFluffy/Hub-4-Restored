@@ -8,9 +8,6 @@ namespace TyFunctions {
 	typedef int(*SetUpFullGameTotals_t)();
 	inline SetUpFullGameTotals_t Original_SetUpFullGameTotals;
 
-	typedef int(__fastcall* CalculateCompletion_t)();
-	inline CalculateCompletion_t Original_CalculateCompletion;
-
 	typedef void(*VoidFunction_t)();
 	inline VoidFunction_t Original_OneOfTheLoadFunctions;
 
