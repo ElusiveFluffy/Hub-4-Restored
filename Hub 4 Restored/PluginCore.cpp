@@ -9,6 +9,7 @@
 #include "SaveFile.h"
 #include "Rangs.h"
 #include "CustomTyDev.h"
+#include "Smashrock.h"
 
 #include "MinHook.h"
 
@@ -38,7 +39,9 @@ bool PluginCore::Setup()
 
     CustomTyDev::OverrideTyDev();
 
-    Rangs::HookCycleFunctions();
+    Smashrock::SmashrockInit();
+
+    Rangs::HookRangFunctions();
 
     return true;
 }

@@ -90,9 +90,9 @@ namespace Rangs
 	inline const int OriginalRangCount = 12;
 
 	inline constexpr int RangCount = 13;
-	inline Boomerangs CycleOrder[] = {Boomerang, Flamerang, Frostyrang, Smasharang, Zappyrang, Zoomerang, Multirang, Infrarang, Megarang, Kaboomerang, Chronorang, Doomerang, Aquarang};
+	inline Boomerangs CycleOrder[] = { Boomerang, Flamerang, Frostyrang, Smasharang, Zappyrang, Zoomerang, Multirang, Infrarang, Megarang, Kaboomerang, Chronorang, Doomerang, Aquarang };
 
 	void SetupRangStructs();
-	void HookCycleFunctions();
+	void HookRangFunctions();
 };
 

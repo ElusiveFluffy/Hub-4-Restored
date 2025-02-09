@@ -178,6 +178,7 @@
     <ClInclude Include="PluginCore.h" />
     <ClInclude Include="Rangs.h" />
     <ClInclude Include="SaveFile.h" />
+    <ClInclude Include="Smashrock.h" />
     <ClInclude Include="TyFunctions.h" />
     <ClInclude Include="TyMemoryValues.h" />
   </ItemGroup>
@@ -197,6 +198,7 @@
     <ClCompile Include="PluginCore.cpp" />
     <ClCompile Include="Rangs.cpp" />
     <ClCompile Include="SaveFile.cpp" />
+    <ClCompile Include="Smashrock.cpp" />
     <ClCompile Include="TyFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>

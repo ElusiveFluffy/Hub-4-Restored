@@ -1,46 +1,58 @@
 #include "pch.h"
 #include "Rangs.h"
+using namespace Rangs;
 #include "MinHook.h"
 #include "TygerFrameworkAPI.hpp"
 #include "NumUtil.h"
 #include "SaveFile.h"
+#include "Smashrock.h"
 
 //TygerMemory
 #include "core.h"
 
-typedef Rangs::Boomerangs(*RangCycleFunction_t)(Rangs::Boomerangs currentRang);
+typedef Boomerangs(__thiscall* SetCurrentRang_t)(void* boomerangManager, Boomerangs newRang);
+SetCurrentRang_t Original_SetCurrentRang;
 
-Rangs::Boomerangs CycleForward(Rangs::Boomerangs currentRang) {
+Boomerangs CycleForward(Boomerangs currentRang) {
 	Hub4SaveDataStruct* saveFile = SaveFile::GetHub4SaveData();
 
-	int index = std::distance(Rangs::CycleOrder, std::find(std::begin(Rangs::CycleOrder), std::end(Rangs::CycleOrder), currentRang));
-	Rangs::Boomerangs nextRang = Rangs::Boomerang;
+	int index = std::distance(CycleOrder, std::find(std::begin(CycleOrder), std::end(CycleOrder), currentRang));
+	Boomerangs nextRang = Boomerang;
 
 	do {
-		index = NumUtil::Wrap(index + 1, Rangs::RangCount - 1);
-		nextRang = Rangs::CycleOrder[index];
+		index = NumUtil::Wrap(index + 1, RangCount - 1);
+		nextRang = CycleOrder[index];
 		//Check if the rang is unlocked in the save file
 	} while (*((bool*)&saveFile->AttributeData + (4 + nextRang)) == false);
 
 	return nextRang;
 }
-Rangs::Boomerangs CycleBackward(Rangs::Boomerangs currentRang) {
+Boomerangs CycleBackward(Boomerangs currentRang) {
 	Hub4SaveDataStruct* saveFile = SaveFile::GetHub4SaveData();
 
-	int index = std::distance(Rangs::CycleOrder, std::find(std::begin(Rangs::CycleOrder), std::end(Rangs::CycleOrder), currentRang));
-	Rangs::Boomerangs previousRang = Rangs::Boomerang;
+	int index = std::distance(CycleOrder, std::find(std::begin(CycleOrder), std::end(CycleOrder), currentRang));
+	Boomerangs previousRang = Boomerang;
 
 	do {
-		index = NumUtil::Wrap(index - 1, Rangs::RangCount - 1);
-		previousRang = Rangs::CycleOrder[index];
+		index = NumUtil::Wrap(index - 1, RangCount - 1);
+		previousRang = CycleOrder[index];
 		//Check if the rang is unlocked in the save file
 	} while (*((bool*)&saveFile->AttributeData + (4 + previousRang)) == false);
 
 	return previousRang;
 }
 
-void Rangs::HookCycleFunctions()
+// much easier to use __fastcall as a detour for __thiscall as it works similarly to __thiscall, without need it to be a class member (which minhook doesn't seem to like),
+// but it also uses edx, which is unused in this case as __thiscall only uses one register(ecx) for the first value which is the "this" of the class member, 
+// the other args afterwards are on the stack
+Boomerangs __fastcall CurrentRangChanged(void* boomerangManager, void* edx, Boomerangs newRang) {
+	Smashrock::UpdateSmashrockValidRang(newRang);
+	return Original_SetCurrentRang(boomerangManager, newRang);
+}
+
+void Rangs::HookRangFunctions()
 {
+	//Cycle functions
 	MH_STATUS minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x3c920), &CycleForward, nullptr);
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
@@ -49,6 +61,14 @@ void Rangs::HookCycleFunctions()
 	}
 
 	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x3c9c0), &CycleBackward, nullptr);
+	if (minHookStatus != MH_OK) {
+		std::string error = MH_StatusToString(minHookStatus);
+		API::LogPluginMessage("Failed to Create Rang Cycle Backward Function Hook, With the Error: " + error, Error);
+		return;
+	}
+
+	//Set rang function
+	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x3f8c0), &CurrentRangChanged, reinterpret_cast<LPVOID*>(&Original_SetCurrentRang));
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
 		API::LogPluginMessage("Failed to Create Rang Cycle Backward Function Hook, With the Error: " + error, Error);
