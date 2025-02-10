@@ -81,7 +81,7 @@ int GetTalismanCount() {
 	return std::count(saveData->Talismans, saveData->Talismans + 5, true);
 }
 
-int __fastcall CalculateCompletion(void* contextMaybe) {
+int __fastcall CalculateCompletion(void* gameData) {
 
 	int collectableCount = 0;
 
@@ -110,14 +110,6 @@ void HookGameTotalsFunctions() {
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
 		API::LogPluginMessage("Failed to Create the Calculate Completion Function Hook, With the Error: " + error, Error);
-		return;
-	}
-
-	//Enable both hooks
-	minHookStatus = MH_EnableHook(MH_ALL_HOOKS);
-	if (minHookStatus != MH_OK) {
-		std::string error = MH_StatusToString(minHookStatus);
-		API::LogPluginMessage("Failed to Hook Game Totals Function, With the Error: " + error, Error);
 		return;
 	}
 

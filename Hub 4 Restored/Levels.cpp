@@ -25,12 +25,4 @@ void Levels::HookFunctions()
 		API::LogPluginMessage("Failed to Create One of the Load Funtion Hook, With the Error: " + error, Error);
 		return;
 	}
-
-	//Enable the hooks
-	minHookStatus = MH_EnableHook(MH_ALL_HOOKS);
-	if (minHookStatus != MH_OK) {
-		std::string error = MH_StatusToString(minHookStatus);
-		API::LogPluginMessage("Failed to One of the Load Functions, With the Error: " + error, Error);
-		return;
-	}
 }

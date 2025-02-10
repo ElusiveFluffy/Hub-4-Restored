@@ -39,7 +39,5 @@ EXTERN_C bool TygerFrameworkPluginInitialize(TygerFrameworkPluginInitializeParam
     API::AddOnTyInitialized(PluginCore::OnTyInitialized);
     API::AddTickBeforeGame(PluginCore::Tick);
 
-    PluginCore::Setup();
-
-    return true;
+    return PluginCore::Setup();
 }

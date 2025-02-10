@@ -74,14 +74,6 @@ void Rangs::HookRangFunctions()
 		API::LogPluginMessage("Failed to Create Rang Cycle Backward Function Hook, With the Error: " + error, Error);
 		return;
 	}
-
-	//Enable the hooks
-	minHookStatus = MH_EnableHook(MH_ALL_HOOKS);
-	if (minHookStatus != MH_OK) {
-		std::string error = MH_StatusToString(minHookStatus);
-		API::LogPluginMessage("Failed to Enable the Rang Cycle Function Hooks, With the Error: " + error, Error);
-		return;
-	}
 }
 
 Rangs::RangNameAndSoundData Rangs::ExtraRangNameAndSounds[] = {

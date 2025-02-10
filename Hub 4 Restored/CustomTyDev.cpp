@@ -3,6 +3,7 @@
 #include "MinHook.h"
 #include "TyFunctions.h"
 #include "SaveFile.h"
+#include "TygerFrameworkAPI.hpp"
 
 //Tyger Memory
 #include "core.h"
@@ -37,12 +38,8 @@ void CustomTyDev::OverrideTyDev()
 {
 	MH_STATUS minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x14eac0), &SetSaveFileData, reinterpret_cast<LPVOID*>(&Original_SetSaveFileData));
 	if (minHookStatus != MH_OK) {
-		return;
-	}
-
-	//Enable the hooks
-	minHookStatus = MH_EnableHook(MH_ALL_HOOKS);
-	if (minHookStatus != MH_OK) {
+		std::string error = MH_StatusToString(minHookStatus);
+		API::LogPluginMessage("Failed to Create Custom Ty Dev Function Hook, With the Error: " + error, Error);
 		return;
 	}
 }

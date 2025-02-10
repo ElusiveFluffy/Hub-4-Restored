@@ -9,6 +9,9 @@ using namespace Smashrock;
 #include "sound.h"
 
 //Array with size of 3
+//Index 0: Ice wall
+//Index 1: Fire logs
+//Index 2: Smash rock
 Rangs::Boomerangs* RCBlockageValidRangs = nullptr;
 
 typedef UINT* (__fastcall* PlayShatterableSound_t)(ShatterableProp* prop);
@@ -40,13 +43,6 @@ void HookShatterFunction() {
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
 		API::LogPluginMessage("Failed to Create Play Shatterable Sound Function Hook, With the Error: " + error, Error);
-		return;
-	}
-	//Enable the hooks
-	minHookStatus = MH_EnableHook(MH_ALL_HOOKS);
-	if (minHookStatus != MH_OK) {
-		std::string error = MH_StatusToString(minHookStatus);
-		API::LogPluginMessage("Failed to Enable the Rang Cycle Function Hooks, With the Error: " + error, Error);
 		return;
 	}
 }

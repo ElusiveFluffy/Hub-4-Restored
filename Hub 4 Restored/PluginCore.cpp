@@ -19,17 +19,30 @@
 #include "gamestate.h"
 #include "hero.h"
 
-void InitMinHook() {
+bool InitMinHook() {
     MH_STATUS minHookStatus = MH_Initialize();
     if (minHookStatus != MH_OK) {
         std::string error = MH_StatusToString(minHookStatus);
         API::LogPluginMessage("Failed to Initialize Minhook, With the Error: " + error, Error);
+        return false;
     }
+    return true;
+}
+
+bool EnableAllHooks() {
+    MH_STATUS minHookStatus = MH_EnableHook(MH_ALL_HOOKS);
+    if (minHookStatus != MH_OK) {
+        std::string error = MH_StatusToString(minHookStatus);
+        API::LogPluginMessage("Failed to Enable the Function Hooks, With the Error: " + error, Error);
+        return false;
+    }
+    return true;
 }
 
 bool PluginCore::Setup()
 {
-    InitMinHook();
+    if (!InitMinHook())
+        return false;
 
     TyMemoryValues::DisableGameInfoID(LevelCode::E3);
     TyFunctions::SetFuntions();
@@ -42,6 +55,9 @@ bool PluginCore::Setup()
     Smashrock::SmashrockInit();
 
     Rangs::HookRangFunctions();
+
+    if (!EnableAllHooks())
+        return false;
 
     return true;
 }
