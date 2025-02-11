@@ -76,6 +76,11 @@ void Rangs::HookRangFunctions()
 	}
 }
 
+Boomerangs Rangs::GetCurrentRang()
+{
+	return *(Boomerangs*)(Core::moduleBase + 0x2719A0);
+}
+
 Rangs::RangNameAndSoundData Rangs::ExtraRangNameAndSounds[] = {
 	Rangs::RangNameAndSoundData { //Smasharang
 		"prop_0490_rang_09",

@@ -16,6 +16,12 @@
     <Filter Include="Include">
       <UniqueIdentifier>{5dfd21ce-da77-4e0c-929b-db35dd1ffff7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Rangs">
+      <UniqueIdentifier>{3cb647cb-bec8-47ad-94f0-abd784015ecc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Rangs">
+      <UniqueIdentifier>{6f5f8708-b500-4875-a577-3b961c44d3b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -51,9 +57,6 @@
     <ClInclude Include="SaveFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Rangs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="NumUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -62,6 +65,12 @@
     </ClInclude>
     <ClInclude Include="Smashrock.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rangs.h">
+      <Filter>Header Files\Rangs</Filter>
+    </ClInclude>
+    <ClInclude Include="Smasharang.h">
+      <Filter>Header Files\Rangs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -89,9 +98,6 @@
     <ClCompile Include="SaveFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rangs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NumUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -100,6 +106,12 @@
     </ClCompile>
     <ClCompile Include="Smashrock.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Smasharang.cpp">
+      <Filter>Source Files\Rangs</Filter>
+    </ClCompile>
+    <ClCompile Include="Rangs.cpp">
+      <Filter>Source Files\Rangs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
