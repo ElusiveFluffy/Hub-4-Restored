@@ -35,7 +35,7 @@ namespace Rangs
 		int unk2;
 		int unk3;
 		int RangNameTextIndex;
-		int unk4;
+		int RangDescTextIndex;
 		GlobalSound ThrowSoundID;
 		GlobalSound CatchSoundID;
 		GlobalSound DeflectSoundID;

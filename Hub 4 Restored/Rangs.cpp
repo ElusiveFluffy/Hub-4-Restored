@@ -90,7 +90,7 @@ Rangs::RangNameAndSoundData Rangs::ExtraRangNameAndSounds[] = {
 		0,
 		0,
 		0x2e,
-		0x38,
+		0x3c,
 		TyRangSmashThrow,
 		TyRangSmashCatch,
 		TyRangSmashDeflect,
@@ -115,7 +115,7 @@ void RedirectRangModelAndSoundData() {
 	int ptr = (int)&NameAndSounds->RangNameTextIndex;
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c439), &ptr, 4);
 
-	ptr = (int)&NameAndSounds->unk4;
+	ptr = (int)&NameAndSounds->RangDescTextIndex;
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c409), &ptr, 4);
 }
 
