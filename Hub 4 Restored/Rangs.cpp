@@ -13,6 +13,9 @@ using namespace Rangs;
 typedef Boomerangs(__thiscall* SetCurrentRang_t)(void* boomerangManager, Boomerangs newRang);
 SetCurrentRang_t Original_SetCurrentRang;
 
+//To not add an extra arg to the cycle functions used with a hook, which probably wouldn't work
+bool CycleDontIncludeAqua = true;
+
 Boomerangs CycleForward(Boomerangs currentRang) {
 	Hub4SaveDataStruct* saveFile = SaveFile::GetHub4SaveData();
 
@@ -20,7 +23,7 @@ Boomerangs CycleForward(Boomerangs currentRang) {
 	Boomerangs nextRang = Boomerang;
 
 	do {
-		index = NumUtil::Wrap(index + 1, RangCount - 1);
+		index = NumUtil::Wrap(index + 1, RangCount - CycleDontIncludeAqua);
 		nextRang = CycleOrder[index];
 		//Check if the rang is unlocked in the save file
 	} while (*((bool*)&saveFile->AttributeData + (4 + nextRang)) == false);
@@ -34,12 +37,34 @@ Boomerangs CycleBackward(Boomerangs currentRang) {
 	Boomerangs previousRang = Boomerang;
 
 	do {
-		index = NumUtil::Wrap(index - 1, RangCount - 1);
+		index = NumUtil::Wrap(index - 1, RangCount - CycleDontIncludeAqua);
 		previousRang = CycleOrder[index];
 		//Check if the rang is unlocked in the save file
 	} while (*((bool*)&saveFile->AttributeData + (4 + previousRang)) == false);
 
 	return previousRang;
+}
+
+Boomerangs RangInfoCycleForward() {
+	Sound::PlayTySoundByIndex(GlobalSound::FrontendClick);
+
+	Boomerangs* currentRangInfoRang = (Boomerangs*)(Core::moduleBase + 0x288394);
+	CycleDontIncludeAqua = false;
+	*currentRangInfoRang = CycleForward(*currentRangInfoRang);
+	CycleDontIncludeAqua = true;
+
+	return *currentRangInfoRang;
+}
+
+Boomerangs RangInfoCycleBackward() {
+	Sound::PlayTySoundByIndex(GlobalSound::FrontendClick);
+
+	Boomerangs* currentRangInfoRang = (Boomerangs*)(Core::moduleBase + 0x288394);
+	CycleDontIncludeAqua = false;
+	*currentRangInfoRang = CycleBackward(*currentRangInfoRang);
+	CycleDontIncludeAqua = true;
+
+	return *currentRangInfoRang;
 }
 
 // much easier to use __fastcall as a detour for __thiscall as it works similarly to __thiscall, without need it to be a class member (which minhook doesn't seem to like),
@@ -67,11 +92,25 @@ void Rangs::HookRangFunctions()
 		return;
 	}
 
+	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0xf3500), &RangInfoCycleForward, nullptr);
+	if (minHookStatus != MH_OK) {
+		std::string error = MH_StatusToString(minHookStatus);
+		API::LogPluginMessage("Failed to Create Rang Info Cycle Forward Function Hook, With the Error: " + error, Error);
+		return;
+	}
+
+	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0xf3540), &RangInfoCycleBackward, nullptr);
+	if (minHookStatus != MH_OK) {
+		std::string error = MH_StatusToString(minHookStatus);
+		API::LogPluginMessage("Failed to Create Rang Info Cycle Backward Function Hook, With the Error: " + error, Error);
+		return;
+	}
+
 	//Set rang function
 	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x3f8c0), &CurrentRangChanged, reinterpret_cast<LPVOID*>(&Original_SetCurrentRang));
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
-		API::LogPluginMessage("Failed to Create Rang Cycle Backward Function Hook, With the Error: " + error, Error);
+		API::LogPluginMessage("Failed to Create the Rang Changed Function Hook, With the Error: " + error, Error);
 		return;
 	}
 }
@@ -202,6 +241,31 @@ void SetRangCycleOrder() {
 	//The rest is simpler with a hook and less time sensitive (and required to change the amount of rangs)
 }
 
+void* RangInfoModels;
+
+void RedirectRangInfoModelPtrs() {
+	RangInfoModels = new void*[RangCount];
+
+	//Game info cycling model pointers
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xe4480), &RangInfoModels, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xe448b), &RangInfoModels, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xe44ae), &RangInfoModels, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xe44ba), &RangInfoModels, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xe44cd), &RangInfoModels, 4);
+
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xf315a), &RangInfoModels, 4);
+
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xf35ee), &RangInfoModels, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xf3614), &RangInfoModels, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xf362f), &RangInfoModels, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xf364e), &RangInfoModels, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xf3677), &RangInfoModels, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xf368e), &RangInfoModels, 4);
+
+	//Rang count
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xe44de), (int*)&RangCount, 1);
+}
+
 Rangs::RangPropertyFunctions** RangPropertySetupFunctions;
 
 void Rangs::SetupRangStructs()
@@ -225,6 +289,7 @@ void Rangs::SetupRangStructs()
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x10f6), (int*)&RangCount, 4);
 
 	SetRangCycleOrder();
+	RedirectRangInfoModelPtrs();
 
 	RedirectRangDataPointers();
 	RedirectRangGlowArray();
