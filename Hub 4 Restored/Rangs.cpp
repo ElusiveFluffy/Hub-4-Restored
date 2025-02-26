@@ -20,7 +20,7 @@ Boomerangs CycleForward(Boomerangs currentRang) {
 	Hub4SaveDataStruct* saveFile = SaveFile::GetHub4SaveData();
 
 	int index = std::distance(CycleOrder, std::find(std::begin(CycleOrder), std::end(CycleOrder), currentRang));
-	Boomerangs nextRang = Boomerang;
+	Boomerangs nextRang = Ironbark;
 
 	do {
 		index = NumUtil::Wrap(index + 1, RangCount - CycleDontIncludeAqua);
@@ -34,7 +34,7 @@ Boomerangs CycleBackward(Boomerangs currentRang) {
 	Hub4SaveDataStruct* saveFile = SaveFile::GetHub4SaveData();
 
 	int index = std::distance(CycleOrder, std::find(std::begin(CycleOrder), std::end(CycleOrder), currentRang));
-	Boomerangs previousRang = Boomerang;
+	Boomerangs previousRang = Ironbark;
 
 	do {
 		index = NumUtil::Wrap(index - 1, RangCount - CycleDontIncludeAqua);
