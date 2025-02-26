@@ -66,7 +66,7 @@ bool PluginCore::Setup()
 
 void PluginCore::EarlyInit()
 {
-    Core::initialize((HMODULE)GetModuleHandle(0));
+    Core::initialize(GetModuleHandle(0));
     Rangs::SetupRangStructs();
 
     SaveFile::SaveFileInit();
