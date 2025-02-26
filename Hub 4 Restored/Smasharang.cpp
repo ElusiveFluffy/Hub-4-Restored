@@ -26,6 +26,8 @@ int __fastcall E4MetalDoorEvent(void* metalDoorActor, void* edx, int* eventID) {
 	//Don't run the rang event if it isn't the smasharang or kaboomerang
 	if (*eventID != 8)
 		return Original_E4MetalDoorEvent(metalDoorActor, eventID);
+	//Seems to usually just return the event ID
+	return *eventID;
 }
 
 void Smasharang::HookSmasharangDamages()
