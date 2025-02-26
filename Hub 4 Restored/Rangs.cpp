@@ -158,9 +158,6 @@ void RedirectRangModelAndSoundData() {
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c409), &ptr, 4);
 }
 
-int* RangDataPointers[Rangs::RangCount];
-//int* ExtraRangDataPointers;
-
 Rangs::RangActorData* RangActorDataArray;
 
 void RedirectRangDataPointers() {
@@ -168,11 +165,6 @@ void RedirectRangDataPointers() {
 
 	//Game expects all the bytes to be 0, usually all 0xCD
 	memset(RangActorDataArray, 0, sizeof(Rangs::RangActorData) * Rangs::RangCount);
-
-	//int dataPointers = (int)&RangDataPointers;
-	//Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c5c7), &dataPointers, 4);
-	
-	//Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x166c18), &dataPointers, 4);
 
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x10f1), &RangActorDataArray, 4);
 
