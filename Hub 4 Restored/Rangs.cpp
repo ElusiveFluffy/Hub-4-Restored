@@ -50,9 +50,11 @@ Boomerangs RangInfoCycleForward() {
 
 	Boomerangs* currentRangInfoRang = (Boomerangs*)(Core::moduleBase + 0x288394);
 	CycleDontIncludeAqua = false;
+	//Need to set it to this variable
 	*currentRangInfoRang = CycleForward(*currentRangInfoRang);
 	CycleDontIncludeAqua = true;
 
+	//The game usually returns it too, even though it doesn't do anything with the return value I think
 	return *currentRangInfoRang;
 }
 
@@ -61,9 +63,11 @@ Boomerangs RangInfoCycleBackward() {
 
 	Boomerangs* currentRangInfoRang = (Boomerangs*)(Core::moduleBase + 0x288394);
 	CycleDontIncludeAqua = false;
+	//Need to set it to this variable
 	*currentRangInfoRang = CycleBackward(*currentRangInfoRang);
 	CycleDontIncludeAqua = true;
 
+	//The game usually returns it too, even though it doesn't do anything with the return value I think
 	return *currentRangInfoRang;
 }
 
@@ -258,6 +262,30 @@ void RedirectRangInfoModelPtrs() {
 	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xe44de), (int*)&RangCount, 1);
 }
 
+void EnableOneRangCycling() {
+	//Easily place a certain amount of nops based on the amount of bytes set
+	BYTE nops[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+
+	//Allow rang wheel to show when idle
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x25f7a), &nops, 2); //(Maybe not required)
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x2e620), &nops, 2);
+
+	//Cycle rangs and allow rang wheel to show while moving
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x162b9c), &nops, 6);
+
+	//Cycle rangs while idle
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x2e5be), &nops, 2);
+
+	//Weird doomerang state change thing that sets Ty's state to idle when you only have one rang and cycle to the doomerang for some reason
+	//Seems to maybe be for changing Ty's state back to idle after throwing the doomerang
+	//The collection state condition doesn't work properly anyways, so check if it is equal to 50 instead of not equal to 33
+	BYTE conditionByte = 50;
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3bedb), &conditionByte, 1);
+	//Change from je to jne
+	conditionByte = 0x75;
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3bedc), &conditionByte, 1);
+}
+
 Rangs::RangPropertyFunctions** RangPropertySetupFunctions;
 
 void Rangs::SetupRangStructs()
@@ -279,6 +307,8 @@ void Rangs::SetupRangStructs()
 
 	//Rang Function
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x10f6), (int*)&RangCount, 4);
+
+	EnableOneRangCycling();
 
 	SetRangCycleOrder();
 	RedirectRangInfoModelPtrs();
