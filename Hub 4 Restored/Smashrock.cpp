@@ -33,7 +33,7 @@ UINT* __fastcall PlayShatterableSound(ShatterableProp* prop) {
 	//The normal function doesn't have a entry for the smashrock
 	//stricmp returns 0 if they're the same
 	if (_stricmp(aliasName, "SMASHROCK") == 0)
-		return Sound::PlayTySoundByIndex(BoulderSmash, &prop->Actor->Position);
+		return Sound::PlayTySoundByIndex(GlobalSound::BoulderSmash, &prop->Actor->Position);
 
 	return Original_PlayShatterableSound(prop);
 }

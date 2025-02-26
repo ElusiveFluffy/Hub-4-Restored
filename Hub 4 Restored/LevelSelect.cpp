@@ -103,7 +103,7 @@ void LevelSelect::MoveSelectionHorizontally(bool pressedRight)
 	*(bool*)(currentSelectedPtr + 357) = true;
 
 	//Menu change option sound
-	Sound::PlayTySoundByIndex(FrontendClick);
+	Sound::PlayTySoundByIndex(GlobalSound::FrontendClick);
 
 	LeftOrRightStillDown = true;
 }
