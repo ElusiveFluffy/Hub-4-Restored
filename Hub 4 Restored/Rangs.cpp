@@ -262,6 +262,46 @@ void RedirectRangInfoModelPtrs() {
 	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xe44de), (int*)&RangCount, 1);
 }
 
+//1 rang count used for controller is stored as a float
+float FloatRangCount;
+
+void SetupRangWheel() {
+	//Rang model init count
+	int wheelRangCount = RangCount - 1; //-1 to not include the aquarang
+	//Init
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3d955), &wheelRangCount, 1);
+	//Rang wheel
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3e3e8), &wheelRangCount, 1);
+
+	//Maybe unneeded but just in case
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3dfbd), &wheelRangCount, 1);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3dfe2), &wheelRangCount, 1);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3dfe5), &wheelRangCount, 1);
+	//Selection
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3dde7), &wheelRangCount, 1);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3dbff), &wheelRangCount, 1);
+
+	//Controller selection
+	FloatRangCount = wheelRangCount;
+	float* floatRangCountPtr = &FloatRangCount;
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3df60), &floatRangCountPtr, 4);
+
+	//Opening rang wheel
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3d0ac), &wheelRangCount, 1);
+
+	//Maybe also unneeded but just in case
+	int wheelMaxIndex = wheelRangCount - 1;
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3dc25), &wheelMaxIndex, 4);
+
+	float rangSpacingRadians = 6.28318f / wheelRangCount;
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x1fa23c), &rangSpacingRadians, 4);
+
+	//Rang model array size
+	int rangPtrArraySize = wheelRangCount * 4;
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3d4fb), &rangPtrArraySize, 1);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x3d42a), &rangPtrArraySize, 1);
+}
+
 void EnableOneRangCycling() {
 	//Easily place a certain amount of nops based on the amount of bytes set
 	BYTE nops[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
@@ -312,6 +352,8 @@ void Rangs::SetupRangStructs()
 
 	SetRangCycleOrder();
 	RedirectRangInfoModelPtrs();
+
+	SetupRangWheel();
 
 	RedirectRangDataPointers();
 	RedirectRangGlowArray();
