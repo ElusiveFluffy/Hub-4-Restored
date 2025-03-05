@@ -7,6 +7,9 @@ using namespace Rangs;
 #include "SaveFile.h"
 #include "Smashrock.h"
 
+#include "Flamerang.h"
+#include "Smasharang.h"
+
 //TygerMemory
 #include "core.h"
 
@@ -358,4 +361,11 @@ void Rangs::SetupRangStructs()
 	RedirectRangDataPointers();
 	RedirectRangGlowArray();
 	RedirectRangModelAndSoundData();
+}
+
+//Set up stuff more specific to individual rangs
+void Rangs::RangSpecificSetup()
+{
+	Smasharang::HookSmasharangDamages();
+	Flamerang::ShortenCrateBurnTime();
 }

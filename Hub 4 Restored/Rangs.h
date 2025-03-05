@@ -95,5 +95,6 @@ namespace Rangs
 	void SetupRangStructs();
 	void HookRangFunctions();
 	Boomerangs GetCurrentRang();
+	void RangSpecificSetup();
 };
 

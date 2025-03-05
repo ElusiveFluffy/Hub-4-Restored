@@ -72,6 +72,9 @@
     <ClInclude Include="Smasharang.h">
       <Filter>Header Files\Rangs</Filter>
     </ClInclude>
+    <ClInclude Include="Flamerang.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -112,6 +115,9 @@
     </ClCompile>
     <ClCompile Include="Rangs.cpp">
       <Filter>Source Files\Rangs</Filter>
+    </ClCompile>
+    <ClCompile Include="Flamerang.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,6 @@
 #include "Rangs.h"
 #include "CustomTyDev.h"
 #include "Smashrock.h"
-#include "Smasharang.h"
 
 #include "MinHook.h"
 
@@ -56,7 +55,7 @@ bool PluginCore::Setup()
     Smashrock::SmashrockInit();
 
     Rangs::HookRangFunctions();
-    Smasharang::HookSmasharangDamages();
+    Rangs::RangSpecificSetup();
 
     if (!EnableAllHooks())
         return false;
