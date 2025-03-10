@@ -15,8 +15,7 @@ float HorizontalSpacing = 270.0f;
 
 void LevelSelect::SetupMultiColumn()
 {
-	//0x168 bytes per one
-	int UIButtonPosPtr = GetButtonInfoStart() + 8;
+	UIButtonGroup* buttonGroup = GetUIButtonGroup();
 
 	float xPos = xPosStart;
 	float yPos = yPosStart; //+18 per row
@@ -31,12 +30,10 @@ void LevelSelect::SetupMultiColumn()
 		else if ((i % 4) == 0 && i != 0)
 			yPos += 30.0f;
 
-		*(float*)UIButtonPosPtr = xPos;
-		*(float*)(UIButtonPosPtr + 4) = yPos;
+		buttonGroup->Buttons[i].Text.X = xPos;
+		buttonGroup->Buttons[i].Text.Y = yPos;
 
 		yPos += 18.0f;
-
-		UIButtonPosPtr += 0x168;
 	}
 }
 
@@ -78,29 +75,27 @@ void LevelSelect::MoveSelectionHorizontally(bool pressedRight)
 	if (LeftOrRightStillDown)
 		return;
 
-	int UIButtonsPtr = GetButtonInfoStart();
+	UIButtonGroup* buttonGroup = GetUIButtonGroup();
 	//Old one
-	int currentSelectedPtr = UIButtonsPtr + (0x168 * *GetSelectedLevelPtr());
-	*(int*)(currentSelectedPtr + 40) = GetTextDeselectedColour();
+	UIButton* currentSelectedButton = &buttonGroup->Buttons[buttonGroup->CurrentSelection];
+	currentSelectedButton->Text.Colour = currentSelectedButton->Descriptor->DeselectedColour;
 	//Smoothly change size
-	*((int*)(currentSelectedPtr + 0x160)) = 0;
+	currentSelectedButton->PulseSizeRadians = 0;
 	//Deselect it (disables the pulsing)
-	*(bool*)(currentSelectedPtr + 357) = false;
+	currentSelectedButton->Selected = false;
 
 	//New one
-	int newLevelIndex = 0;
 	if (pressedRight)
-		newLevelIndex = NumUtil::Wrap(*GetSelectedLevelPtr() + 8, 24);
+		buttonGroup->CurrentSelection = NumUtil::Wrap(buttonGroup->CurrentSelection + 8, 24);
 	else
-		newLevelIndex = NumUtil::Wrap(*GetSelectedLevelPtr() - 8, 24);
+		buttonGroup->CurrentSelection = NumUtil::Wrap(buttonGroup->CurrentSelection - 8, 24);
 
-	*GetSelectedLevelPtr() = newLevelIndex;
-	currentSelectedPtr = UIButtonsPtr + (0x168 * newLevelIndex);
-	*(int*)(currentSelectedPtr + 40) = GetTextSelectedColour();
+	currentSelectedButton = &buttonGroup->Buttons[buttonGroup->CurrentSelection];
+	currentSelectedButton->Text.Colour = currentSelectedButton->Descriptor->SelectedColour;
 	//Smoothly change size (do it for this one too, just in case, something the game does too)
-	*((int*)(currentSelectedPtr + 0x160)) = 0;
+	currentSelectedButton->PulseSizeRadians = 0;
 	//Select it (enables the pulsing)
-	*(bool*)(currentSelectedPtr + 357) = true;
+	currentSelectedButton->Selected = true;
 
 	//Menu change option sound
 	Sound::PlayTySoundByIndex(GlobalSound::FrontendClick);
