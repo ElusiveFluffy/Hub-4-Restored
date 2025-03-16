@@ -65,7 +65,7 @@ int __fastcall InitGamepadSettingsUI(ControlOptionsUIButtons* options) {
 	//Init it the menu to change first, since it got jumped over to make it easier to avoid a error
 	InitUIButton(&options->GamepadOptions, buttonCount);
 
-	//Set the back button to move it to the bottom (the new button needs to be initialized before running the original function)
+	//Set the back button as the bottom option (the new button needs to be initialized before running the original function)
 	SetUIButtonText(&options->GamepadOptions.Buttons[buttonCount - 1], 0x55, nullptr, nullptr);
 	Vector4f* gamepadOptionsStart = (Vector4f*)(Core::moduleBase + 0x202b70);
 	Vector4f pos = *gamepadOptionsStart;
@@ -79,7 +79,7 @@ int __fastcall InitGamepadSettingsUI(ControlOptionsUIButtons* options) {
 	float fontSize = 120;
 	options->GamepadOptions.Buttons[1].Text.FontSize = fontSize;
 
-	//Add my custom button
+	//Set the custom button
 	SetUIButtonText(&options->GamepadOptions.Buttons[2], 0x37C, nullptr, nullptr);
 	pos = *gamepadOptionsStart;
 	pos.x = 300.0f;
