@@ -10,6 +10,7 @@
 #include "Rangs.h"
 #include "CustomTyDev.h"
 #include "Smashrock.h"
+#include "Options.h"
 
 #include "MinHook.h"
 
@@ -41,9 +42,6 @@ bool EnableAllHooks() {
 
 bool PluginCore::Setup()
 {
-    if (!InitMinHook())
-        return false;
-
     TyMemoryValues::DisableGameInfoID(LevelCode::E3);
     TyFunctions::SetFuntions();
 
@@ -66,9 +64,15 @@ bool PluginCore::Setup()
 void PluginCore::EarlyInit()
 {
     Core::initialize(GetModuleHandle(0));
+    if (!InitMinHook())
+        return;
     Rangs::SetupRangStructs();
 
+    Options::SetupExtraGamepadOption();
+
     SaveFile::SaveFileInit();
+
+    EnableAllHooks();
 }
 
 void PluginCore::OnTyInitialized()

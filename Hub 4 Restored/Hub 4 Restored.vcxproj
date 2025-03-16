@@ -175,6 +175,7 @@
     <ClInclude Include="Include\TygerFrameworkAPI.hpp" />
     <ClInclude Include="Levels.h" />
     <ClInclude Include="LevelSelect.h" />
+    <ClInclude Include="Options.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PluginCore.h" />
     <ClInclude Include="Rangs.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Levels.cpp" />
     <ClCompile Include="LevelSelect.cpp" />
+    <ClCompile Include="Options.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
