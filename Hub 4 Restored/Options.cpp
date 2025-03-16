@@ -70,7 +70,7 @@ void HandleGamepadOptionSelection() {
 		break;
 	}
 
-	//Make sure esi and eax is correct
+	//Make sure esi and eax is correct as this is run partway through a function
 	__asm {
 		lea esi, [options]
 		mov eax, currentSelection
@@ -137,7 +137,7 @@ int __fastcall DrawGamepadOptionsMenu(ControlOptionsUIButtons* options) {
 	return Original_DrawGamepadOptionsMenu(options);
 }
 
-void HookInitGamepadSettingsUI() {
+void HookGamepadSettings() {
 	MH_STATUS minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0xed140), &InitGamepadSettingsUI, reinterpret_cast<LPVOID*>(&Original_InitGamePadSettings));
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
@@ -150,27 +150,42 @@ void HookInitGamepadSettingsUI() {
 	}
 }
 
+void EditHandleGamepadOptionsFunc() {
+	//Edit the handle gamepad options function to be able to work with my extra button (added a nop on the end to not break the code for the last 2 function call replacements)
+	BYTE functionCall[] = { 0xE8, 0, 0, 0, 0, 0x90 };
+	//Function calls are relative from the end of the opcode (why there is a -5)
+	int functionOffset = (int)&HandleGamepadOptionSelection - (int)(Core::moduleBase + 0xea90f) - 5;
+	memcpy(&functionCall[1], &functionOffset, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea90f), &functionCall, 5);
+
+	//2 below for pressing left/right
+	functionOffset = (int)&HandleGamepadOptionSelection - (int)(Core::moduleBase + 0xea989) - 5;
+	memcpy(&functionCall[1], &functionOffset, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea989), &functionCall, 6);
+
+	functionOffset = (int)&HandleGamepadOptionSelection - (int)(Core::moduleBase + 0xea94c) - 5;
+	memcpy(&functionCall[1], &functionOffset, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea94c), &functionCall, 6);
+
+	//Change both from a jne to a jmp to skip running the original logic for the vibration setting button
+	BYTE jumpOpcode = 0xEB;
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea992), &jumpOpcode, 1);
+	BYTE jumpOpcode2[] = { 0xE9, 0x83, 0x00, 0x00, 0x00 };
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea955), &jumpOpcode2, 5);
+
+
+	//Change the back option to check button index 3 instead of 2
+	BYTE cmpCheck = 3;
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea916), &cmpCheck, 1);
+}
+
 void Options::SetupExtraGamepadOption()
 {
 	//Jump past the mem allocation function, in the gamepad options init function, as its easier for me to allocate it myself before the function runs
 	BYTE jumpOpcode[] = { 0xEB, 0x0B };
 	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xed161), &jumpOpcode, 2);
 
-	//Edit the handle gamepad options function to be able to work with my extra button
-	BYTE functionCall[5] = { 0xE8, 0, 0, 0, 0 };
-	int functionOffset = (int)&HandleGamepadOptionSelection - (int)(Core::moduleBase + 0xea90f) - 5;
-	memcpy(&functionCall[1], &functionOffset, 4);
-	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea90f), &functionCall, 5);
-
-	//There is 3 parts that handle the option, but easier to make it jump to the same function I had before
-	BYTE jumpOpcode2[] = {0xE9, 0x76, 0xff, 0xff, 0xff};
-	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea989), &jumpOpcode2, 5);
-	jumpOpcode[1] = 0xB8;
-	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea955), &jumpOpcode, 2);
-
-	//Change the back option to check button 4 instead of 3
-	BYTE cmpCheck = 3;
-	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea916), &cmpCheck, 1);
+	EditHandleGamepadOptionsFunc();
 
 	//Set functions from the game
 	InitUIButton = (InitUIButton_t)(Core::moduleBase + 0xf55c0);
@@ -182,7 +197,7 @@ void Options::SetupExtraGamepadOption()
 	UISelectNext = (UIButtonGroupFunc_t)(Core::moduleBase + 0xf59d0);
 	UIButtonsUpdate = (UIButtonGroupFunc_t)(Core::moduleBase + 0xf6650);
 
-	HookInitGamepadSettingsUI();
+	HookGamepadSettings();
 }
 
 std::string iniPath = "Plugins\\Hub 4 Restored Settings.ini";
