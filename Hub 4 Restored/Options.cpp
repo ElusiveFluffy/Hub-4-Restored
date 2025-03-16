@@ -2,6 +2,11 @@
 #include "Options.h"
 #include "MinHook.h"
 #include "UIStructs.h"
+#include "TygerFrameworkAPI.hpp"
+#include "ini.h"
+
+#include <filesystem>
+namespace fs = std::filesystem;
 
 //TygerMemory
 #include "core.h"
@@ -34,6 +39,10 @@ UIButtonGroupFunc_t UIButtonsUpdate;
 
 UIButtonGroup GamepadThrowDirButtons{};
 
+//The specific bytes to set depending on the state of the option
+BYTE ThrowTyBody[] = { 0x75, 0x0C };
+BYTE ThrowCamera[] = { 0x90, 0x90 };
+
 void HandleGamepadOptionSelection() {
 	ControlOptionsUIButtons* options = (ControlOptionsUIButtons*)(Core::moduleBase + 0x2623D0);
 	int currentSelection = options->GamepadOptions.CurrentSelection;
@@ -50,6 +59,14 @@ void HandleGamepadOptionSelection() {
 		Sound::PlayTySoundByIndex(GlobalSound::FrontendClick);
 		UISelectNext(&GamepadThrowDirButtons);
 		Options::GamepadThrowDirection = (Options::ThrowDirection)GamepadThrowDirButtons.CurrentSelection;
+
+		BYTE* codeBytes;
+		if (Options::GamepadThrowDirection == Options::TyBody)
+			codeBytes = ThrowTyBody;
+		else
+			codeBytes = ThrowCamera;
+		Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x16a6bc), codeBytes, 2);
+		Options::SaveOptionsToIni();
 		break;
 	}
 
@@ -61,6 +78,9 @@ void HandleGamepadOptionSelection() {
 }
 
 int __fastcall InitGamepadSettingsUI(ControlOptionsUIButtons* options) {
+	if (API::IsInitialized())
+		API::LogPluginMessage("Setting up Custom Ingame Option");
+
 	int buttonCount = 4;
 	//Init it the menu to change first, since it got jumped over to make it easier to avoid a error
 	InitUIButton(&options->GamepadOptions, buttonCount);
@@ -146,7 +166,7 @@ void Options::SetupExtraGamepadOption()
 	BYTE jumpOpcode2[] = {0xE9, 0x76, 0xff, 0xff, 0xff};
 	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea989), &jumpOpcode2, 5);
 	jumpOpcode[1] = 0xB8;
-	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea989), &jumpOpcode, 2);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xea955), &jumpOpcode, 2);
 
 	//Change the back option to check button 4 instead of 3
 	BYTE cmpCheck = 3;
@@ -163,4 +183,45 @@ void Options::SetupExtraGamepadOption()
 	UIButtonsUpdate = (UIButtonGroupFunc_t)(Core::moduleBase + 0xf6650);
 
 	HookInitGamepadSettingsUI();
+}
+
+std::string iniPath = "Plugins\\Hub 4 Restored Settings.ini";
+std::string GamepadSection = "Gamepad";
+
+void Options::LoadOptionsFromIni()
+{
+	if (!fs::exists(iniPath))
+		return;
+
+	API::LogPluginMessage("Loading Settings From ini");
+
+	ini::File settings = ini::open(iniPath);
+	if (settings.has_section(GamepadSection)) {
+		ini::Section gamepad = settings[GamepadSection];
+
+		if (gamepad.has_key("ThrowDirection")) {
+			GamepadThrowDirection = (ThrowDirection)gamepad.get<int>("ThrowDirection");
+
+			BYTE* codeBytes;
+			if (GamepadThrowDirection == TyBody)
+				codeBytes = ThrowTyBody;
+			else
+				codeBytes = ThrowCamera;
+			Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x16a6bc), codeBytes, 2);
+
+			UISetSelection(&GamepadThrowDirButtons, GamepadThrowDirection);
+		}
+	}
+}
+
+void Options::SaveOptionsToIni()
+{
+	ini::File settings;
+
+	//Create Gamepad section
+	settings.add_section(GamepadSection);
+	settings[GamepadSection].set<int>("ThrowDirection", GamepadThrowDirection);
+
+	//Save the settings
+	settings.write(iniPath);
 }

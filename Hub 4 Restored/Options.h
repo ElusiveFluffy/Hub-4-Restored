@@ -7,5 +7,7 @@ namespace Options
 	};
 
 	void SetupExtraGamepadOption();
+	void LoadOptionsFromIni();
+	void SaveOptionsToIni();
 	inline ThrowDirection GamepadThrowDirection;
 };

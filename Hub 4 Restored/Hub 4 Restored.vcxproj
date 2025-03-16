@@ -168,6 +168,7 @@
   <ItemGroup>
     <ClInclude Include="CustomTyDev.h" />
     <ClInclude Include="Flamerang.h" />
+    <ClInclude Include="Include\ini.h" />
     <ClInclude Include="NumUtil.h" />
     <ClInclude Include="Collectables.h" />
     <ClInclude Include="framework.h" />

@@ -24,7 +24,8 @@ bool InitMinHook() {
     MH_STATUS minHookStatus = MH_Initialize();
     if (minHookStatus != MH_OK) {
         std::string error = MH_StatusToString(minHookStatus);
-        API::LogPluginMessage("Failed to Initialize Minhook, With the Error: " + error, Error);
+        if (API::IsInitialized())
+            API::LogPluginMessage("Failed to Initialize Minhook, With the Error: " + error, Error);
         return false;
     }
     return true;
@@ -34,7 +35,8 @@ bool EnableAllHooks() {
     MH_STATUS minHookStatus = MH_EnableHook(MH_ALL_HOOKS);
     if (minHookStatus != MH_OK) {
         std::string error = MH_StatusToString(minHookStatus);
-        API::LogPluginMessage("Failed to Enable the Function Hooks, With the Error: " + error, Error);
+        if (API::IsInitialized())
+            API::LogPluginMessage("Failed to Enable the Function Hooks, With the Error: " + error, Error);
         return false;
     }
     return true;
@@ -84,6 +86,8 @@ void PluginCore::OnTyInitialized()
     Minimap::SetMapTransform(LevelCode::E2, Minimap::GetMapTransform(LevelCode::D2));
     Minimap::SetMapTransform(LevelCode::E3, Minimap::GetMapTransform(LevelCode::D1));
     Minimap::SetMapTransform(LevelCode::D1, Minimap::GetMapTransform(LevelCode::B3));
+
+    Options::LoadOptionsFromIni();
 }
 
 void PluginCore::Tick(float deltaSeconds)
