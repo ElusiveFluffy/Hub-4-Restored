@@ -2,12 +2,13 @@
 //TygerMemory
 #include "vector4f.h"
 
+// 0x80/128 is basically 1 in a 0-1 colour scale
 struct ByteRGBA
 {
-    char R;
-    char G;
-    char B;
-    char A;
+    BYTE R;
+    BYTE G;
+    BYTE B;
+    BYTE A;
 };
 
 struct UIText
