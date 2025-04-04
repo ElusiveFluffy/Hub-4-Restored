@@ -127,8 +127,8 @@ Boomerangs Rangs::GetCurrentRang()
 	return *(Boomerangs*)(Core::moduleBase + 0x2719A0);
 }
 
-Rangs::RangNameAndSoundData Rangs::ExtraRangNameAndSounds[] = {
-	Rangs::RangNameAndSoundData { //Smasharang
+Rangs::BoomerangStaticInfo Rangs::ExtraBoomerangInfo[] = {
+	{ //Smasharang
 		"prop_0490_rang_09",
 		"RangStdThrow",
 		"RangStdCatch",
@@ -145,44 +145,44 @@ Rangs::RangNameAndSoundData Rangs::ExtraRangNameAndSounds[] = {
 	},
 };
 
-Rangs::RangNameAndSoundData* NameAndSounds;
+Rangs::BoomerangStaticInfo* BoomerangInfo;
 
 void RedirectRangModelAndSoundData() {
-	NameAndSounds = new Rangs::RangNameAndSoundData[Rangs::RangCount];
-	memcpy(NameAndSounds, (Rangs::RangNameAndSoundData*)(Core::moduleBase + 0x253668), sizeof(Rangs::RangNameAndSoundData) * Rangs::OriginalRangCount);
+	BoomerangInfo = new Rangs::BoomerangStaticInfo[Rangs::RangCount];
+	memcpy(BoomerangInfo, (Rangs::BoomerangStaticInfo*)(Core::moduleBase + 0x253668), sizeof(Rangs::BoomerangStaticInfo) * Rangs::OriginalRangCount);
 
-	memcpy(NameAndSounds + Rangs::RangCount - 1, &Rangs::ExtraRangNameAndSounds, sizeof(Rangs::RangNameAndSoundData));
+	memcpy(BoomerangInfo + Rangs::RangCount - 1, &Rangs::ExtraBoomerangInfo, sizeof(Rangs::BoomerangStaticInfo));
 
 	//Replace the pointers for it
-	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c4ea), &NameAndSounds, 4);
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c4ea), &BoomerangInfo, 4);
 	//For the rang wheel init
-	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c429), &NameAndSounds, 4);
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c429), &BoomerangInfo, 4);
 
-	int ptr = (int)&NameAndSounds->RangNameTextIndex;
+	int ptr = (int)&BoomerangInfo->RangNameTextIndex;
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c439), &ptr, 4);
 
-	ptr = (int)&NameAndSounds->RangDescTextIndex;
+	ptr = (int)&BoomerangInfo->RangDescTextIndex;
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c409), &ptr, 4);
 }
 
-Rangs::RangActorData* RangActorDataArray;
+Rangs::BoomerangDescriptor* BoomerangDescriptorArray;
 
 void RedirectRangDataPointers() {
-	RangActorDataArray = new Rangs::RangActorData[Rangs::RangCount];
+	BoomerangDescriptorArray = new Rangs::BoomerangDescriptor[Rangs::RangCount];
 
 	//Game expects all the bytes to be 0, usually all 0xCD
-	memset(RangActorDataArray, 0, sizeof(Rangs::RangActorData) * Rangs::RangCount);
+	memset(BoomerangDescriptorArray, 0, sizeof(Rangs::BoomerangDescriptor) * Rangs::RangCount);
 
-	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x10f1), &RangActorDataArray, 4);
+	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x10f1), &BoomerangDescriptorArray, 4);
 
-	int dataPointers = (int)&RangActorDataArray->NameAndSoundData;
+	int dataPointers = (int)&BoomerangDescriptorArray->NameAndSoundData;
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c4f8), &dataPointers, 4);
 
-	dataPointers = (int)&RangActorDataArray->ModelName;
+	dataPointers = (int)&BoomerangDescriptorArray->ModelName;
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c4f0), &dataPointers, 4);
 
 	//The end address for a while loop
-	dataPointers = ((int)RangActorDataArray + (sizeof(Rangs::RangActorData) * Rangs::RangCount));
+	dataPointers = ((int)BoomerangDescriptorArray + (sizeof(Rangs::BoomerangDescriptor) * Rangs::RangCount));
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c5e3), &dataPointers, 4);
 }
 

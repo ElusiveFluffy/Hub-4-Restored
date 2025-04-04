@@ -27,7 +27,7 @@ namespace Rangs
 		RangFunctionData* AllocatedMemory;
 	};
 
-	struct RangNameAndSoundData {
+	struct BoomerangStaticInfo {
 		const char* RangPropName;
 		const char* UnusedThrowType;
 		const char* UnusedCatchType;
@@ -42,9 +42,9 @@ namespace Rangs
 		GlobalSound HitSoundID;
 		GlobalSound FlamerangThrowSoundID;
 	};
-	RangNameAndSoundData ExtraRangNameAndSounds[];
+	BoomerangStaticInfo ExtraBoomerangInfo[];
 
-	struct RangActorData
+	struct BoomerangDescriptor
 	{
 		void* SetupFunctions;
 		char* RangModelName;
