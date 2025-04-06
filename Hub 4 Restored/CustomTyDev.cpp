@@ -31,6 +31,9 @@ bool __fastcall CustomTyDev::SetSaveFileData(int arg1)
 	saveData->AttributeData.GotDoomerang = true;
 	saveData->AttributeData.GotSmasharang = true;
 
+	//Skips the welcome to rainbow cliffs cutscene. The game will increment this to 2 and the cutscene only plays when its 1
+	saveData->LevelData[(int)LevelCode::Z1].TimesEntered = 1;
+
 	return isTyDev;
 }
 
