@@ -43,10 +43,10 @@ void __fastcall CrateMsg(GameObject::MKProp* crate, void* edx, MKMessage* msg) {
 	}
 
 	char* aliasName = crate->pDescriptor->AliasName;
-	bool isSmashCrate = _stricmp(aliasName, "SmashCrate") == 0;
-	bool Smashable = Rangs::GetCurrentRang() == Rangs::Smasharang || Rangs::GetCurrentRang() == Rangs::Kaboomerang;
+	bool smashCrate = _stricmp(aliasName, "SmashCrate") == 0;
+	bool smashCrateRang = Rangs::GetCurrentRang() == Rangs::Smasharang || Rangs::GetCurrentRang() == Rangs::Kaboomerang;
 
-	if (isSmashCrate && (msg->MsgID == ExplosionMsg || msg->MsgID == Break) && Smashable) {
+	if (smashCrate && (msg->MsgID == ExplosionMsg || msg->MsgID == Break)) {
 		//Change sfx
 		Hub4GlobalSound newSound = Hub4GlobalSound::SmashCrateSmash;
 		Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x5f791), &newSound, 4);
@@ -57,9 +57,9 @@ void __fastcall CrateMsg(GameObject::MKProp* crate, void* edx, MKMessage* msg) {
 		GlobalSound originalSound = GlobalSound::CrateSmash;
 		Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x5f791), &originalSound, 4);
 	}
-	else if (msg->MsgID == BoomerangMsg && Smashable)
+	else if (smashCrate && msg->MsgID == BoomerangMsg && smashCrateRang)
 		OriginalCrateMsg(crate, msg);
-	else if (msg->MsgID != BoomerangMsg)
+	else if (msg->MsgID != BoomerangMsg || !smashCrate)
 		OriginalCrateMsg(crate, msg);
 }
 
