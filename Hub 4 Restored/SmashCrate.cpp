@@ -46,7 +46,7 @@ void __fastcall CrateMsg(GameObject::MKProp* crate, void* edx, MKMessage* msg) {
 	bool smashCrate = _stricmp(aliasName, "SmashCrate") == 0;
 	bool smashCrateRang = Rangs::GetCurrentRang() == Rangs::Smasharang || Rangs::GetCurrentRang() == Rangs::Kaboomerang;
 
-	if (smashCrate && (msg->MsgID == ExplosionMsg || msg->MsgID == Break)) {
+	if (smashCrate && (msg->MsgID == ExplosionMsg || msg->MsgID == Break) && smashCrateRang) {
 		//Change sfx
 		Hub4SFX::GlobalSound newSound = Hub4SFX::SmashCrateSmash;
 		Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x5f791), &newSound, 4);
