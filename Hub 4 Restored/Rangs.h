@@ -68,7 +68,7 @@ namespace Rangs
 		float RangRange;
 		float RangFlightTime;
 		int* SoundInfo;
-		int* NameAndSoundData;
+		BoomerangStaticInfo* BoomerangInfo;
 		float DoomerangPitchSpeed;
 		float DoomerangTurnSpeed;
 		float DoomerangSpeed;

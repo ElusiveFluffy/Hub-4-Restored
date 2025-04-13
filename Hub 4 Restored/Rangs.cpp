@@ -175,7 +175,7 @@ void RedirectRangDataPointers() {
 
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x10f1), &BoomerangDescriptorArray, 4);
 
-	int dataPointers = (int)&BoomerangDescriptorArray->NameAndSoundData;
+	int dataPointers = (int)&BoomerangDescriptorArray->BoomerangInfo;
 	Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x3c4f8), &dataPointers, 4);
 
 	dataPointers = (int)&BoomerangDescriptorArray->ModelName;
