@@ -144,3 +144,4 @@ namespace GameObject
 
 };
 
+typedef void(__thiscall* GameObjectMsg_t)(GameObject::MKProp* actor, MKMessage* msg);

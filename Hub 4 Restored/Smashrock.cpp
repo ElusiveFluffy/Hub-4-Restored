@@ -3,6 +3,8 @@
 using namespace Smashrock;
 #include "MinHook.h"
 #include "TygerFrameworkAPI.hpp"
+#include "GameObject.h"
+using namespace GameObject;
 
 //TygerMemory
 #include "core.h"
@@ -14,7 +16,7 @@ using namespace Smashrock;
 //Index 2: Smash rock
 Rangs::Boomerangs* RCBlockageValidRangs = nullptr;
 
-typedef UINT* (__fastcall* PlayShatterableSound_t)(ShatterableProp* prop);
+typedef UINT* (__fastcall* PlayShatterableSound_t)(MKProp* prop);
 PlayShatterableSound_t Original_PlayShatterableSound;
 
 //To make the smashrock work with both the smasharang and kaboomerang
@@ -24,11 +26,11 @@ void Smashrock::UpdateSmashrockValidRang(Rangs::Boomerangs newRang)
 		RCBlockageValidRangs[2] = newRang;
 }
 
-UINT* __fastcall PlayShatterableSound(ShatterableProp* prop) {
-	if (!prop->ActorData)
+UINT* __fastcall PlayShatterableSound(MKProp* prop) {
+	if (!prop->pDescriptor)
 		return Original_PlayShatterableSound(prop);
 
-	char* aliasName = prop->ActorData->AliasName;
+	char* aliasName = prop->pDescriptor->AliasName;
 
 	//The normal function doesn't have a entry for the smashrock
 	//stricmp returns 0 if they're the same

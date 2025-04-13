@@ -2,32 +2,31 @@
 #include "Smasharang.h"
 #include "MinHook.h"
 #include "Rangs.h"
+#include "GameObject.h"
+#include "MKMessage.h"
 #include "TygerFrameworkAPI.hpp"
 
 //TygerMemory
 #include "core.h"
 
-typedef int(__thiscall* ActorHit_t)(void* actor, int* eventID);
-ActorHit_t Original_SpyEggHit;
-ActorHit_t Original_E4MetalDoorEvent;
+GameObjectMsg_t Original_SpyEggHit;
+GameObjectMsg_t Original_E4MetalDoorEvent;
 
 //Random kinda pointless thing just to have it match Ty 2 xD
-int __fastcall SpyEggHit(void* spyEggActor, void* edx, int* eventID) {
+void __fastcall SpyEggHit(GameObject::MKProp* spyEggActor, void* edx, MKMessage* msg) {
 	//Only change it to a event id of 9 to break it if its the smasharang
 	//For rangs the event id will always be set to 8
-	if (*eventID == 8 && Rangs::GetCurrentRang() == Rangs::Smasharang)
-		*eventID = 9;
-	return Original_SpyEggHit(spyEggActor, eventID);
+	if (msg->MsgID == BoomerangMsg && Rangs::GetCurrentRang() == Rangs::Smasharang)
+		msg->MsgID = ExplosionMsg;
+	Original_SpyEggHit(spyEggActor, msg);
 }
 
-int __fastcall E4MetalDoorEvent(void* metalDoorActor, void* edx, int* eventID) {
-	if (*eventID == 8 && Rangs::GetCurrentRang() == Rangs::Smasharang || Rangs::GetCurrentRang() == Rangs::Kaboomerang)
-		return Original_E4MetalDoorEvent(metalDoorActor, eventID);
+void __fastcall E4MetalDoorEvent(GameObject::MKProp* metalDoorActor, void* edx, MKMessage* msg) {
+	if (msg->MsgID == ExplosionMsg || (msg->MsgID == BoomerangMsg && (Rangs::GetCurrentRang() == Rangs::Smasharang || Rangs::GetCurrentRang() == Rangs::Kaboomerang)))
+		Original_E4MetalDoorEvent(metalDoorActor, msg);
 	//Don't run the rang event if it isn't the smasharang or kaboomerang
-	if (*eventID != 8)
-		return Original_E4MetalDoorEvent(metalDoorActor, eventID);
-	//Seems to usually just return the event ID
-	return *eventID;
+	else if (msg->MsgID != BoomerangMsg)
+		Original_E4MetalDoorEvent(metalDoorActor, msg);
 }
 
 void Smasharang::HookSmasharangDamages()

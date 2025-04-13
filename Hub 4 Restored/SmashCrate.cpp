@@ -17,8 +17,7 @@ InitGlobalModelStats_t InitGlobalModelStats;
 typedef void(__thiscall* SetPreviousGameObject_t)(GameObject::GameObjDesc** previousGameObjectDesc, GameObject::GameObjDesc* gameObjectDesc);
 SetPreviousGameObject_t SetPreviousGameObject;
 
-typedef void(__thiscall* CrateMsg_t)(GameObject::MKProp* crate, MKMessage* msg);
-CrateMsg_t OriginalCrateMsg;
+GameObjectMsg_t OriginalCrateMsg;
 
 typedef void (*InitCrateGameObjects_t)(char* globalModel);
 InitCrateGameObjects_t OriginalCrateObjectInit;
