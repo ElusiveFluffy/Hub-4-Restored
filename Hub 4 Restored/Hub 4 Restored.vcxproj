@@ -168,7 +168,10 @@
   <ItemGroup>
     <ClInclude Include="CustomTyDev.h" />
     <ClInclude Include="Flamerang.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Hub4GlobalSound.h" />
     <ClInclude Include="Include\ini.h" />
+    <ClInclude Include="MKMessage.h" />
     <ClInclude Include="NumUtil.h" />
     <ClInclude Include="Collectables.h" />
     <ClInclude Include="framework.h" />
@@ -182,6 +185,7 @@
     <ClInclude Include="Rangs.h" />
     <ClInclude Include="SaveFile.h" />
     <ClInclude Include="Smasharang.h" />
+    <ClInclude Include="SmashCrate.h" />
     <ClInclude Include="Smashrock.h" />
     <ClInclude Include="TyFunctions.h" />
     <ClInclude Include="TyMemoryValues.h" />
@@ -190,6 +194,7 @@
   <ItemGroup>
     <ClCompile Include="CustomTyDev.cpp" />
     <ClCompile Include="Flamerang.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="NumUtil.cpp" />
     <ClCompile Include="Collectables.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -206,6 +211,7 @@
     <ClCompile Include="Rangs.cpp" />
     <ClCompile Include="SaveFile.cpp" />
     <ClCompile Include="Smasharang.cpp" />
+    <ClCompile Include="SmashCrate.cpp" />
     <ClCompile Include="Smashrock.cpp" />
     <ClCompile Include="TyFunctions.cpp" />
   </ItemGroup>

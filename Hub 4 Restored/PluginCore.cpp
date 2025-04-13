@@ -9,7 +9,7 @@
 #include "SaveFile.h"
 #include "Rangs.h"
 #include "CustomTyDev.h"
-#include "Smashrock.h"
+#include "GameObject.h"
 #include "Options.h"
 
 #include "MinHook.h"
@@ -52,7 +52,7 @@ bool PluginCore::Setup()
 
     CustomTyDev::OverrideTyDev();
 
-    Smashrock::SmashrockInit();
+    GameObject::APIInit();
 
     Rangs::HookRangFunctions();
     Rangs::RangSpecificSetup();
@@ -69,6 +69,7 @@ void PluginCore::EarlyInit()
     if (!InitMinHook())
         return;
     Rangs::SetupRangStructs();
+    GameObject::EarlyInit();
 
     Options::SetupExtraGamepadOption();
 
