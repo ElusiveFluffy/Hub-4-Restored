@@ -99,7 +99,7 @@
     <ClInclude Include="MKMessage.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Hub4GlobalSound.h">
+    <ClInclude Include="Hub4SFX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -154,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="SmashCrate.cpp">
       <Filter>Source Files\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Hub4SFX.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

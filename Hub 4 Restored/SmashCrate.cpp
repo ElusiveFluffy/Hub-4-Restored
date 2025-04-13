@@ -2,7 +2,7 @@
 #include "SmashCrate.h"
 #include "TygerFrameworkAPI.hpp"
 #include "Rangs.h"
-#include "Hub4GlobalSound.h"
+#include "Hub4SFX.h"
 #include "MinHook.h"
 
 //TygerMemory
@@ -48,7 +48,7 @@ void __fastcall CrateMsg(GameObject::MKProp* crate, void* edx, MKMessage* msg) {
 
 	if (smashCrate && (msg->MsgID == ExplosionMsg || msg->MsgID == Break)) {
 		//Change sfx
-		Hub4GlobalSound newSound = Hub4GlobalSound::SmashCrateSmash;
+		Hub4SFX::GlobalSound newSound = Hub4SFX::SmashCrateSmash;
 		Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x5f791), &newSound, 4);
 
 		//Now run the original function with the changed sfx

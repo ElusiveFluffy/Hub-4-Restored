@@ -10,6 +10,7 @@
 #include "Rangs.h"
 #include "CustomTyDev.h"
 #include "GameObject.h"
+#include "Hub4SFX.h"
 #include "Options.h"
 
 #include "MinHook.h"
@@ -70,6 +71,8 @@ void PluginCore::EarlyInit()
         return;
     Rangs::SetupRangStructs();
     GameObject::EarlyInit();
+
+    Hub4SFX::UpdateGlobalSoundCount();
 
     Options::SetupExtraGamepadOption();
 
