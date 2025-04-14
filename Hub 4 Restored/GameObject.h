@@ -142,6 +142,6 @@ namespace GameObject
     void EarlyInit();
     void APIInit();
 
+    typedef void(__thiscall* GameObjectMsg_t)(MKProp* actor, MKMessage* msg);
+    typedef MKProp** (__thiscall* GetMKPropRange_t)(GameObjDesc* gameObjDesc, MKProp* pOutProp[2]);
 };
-
-typedef void(__thiscall* GameObjectMsg_t)(GameObject::MKProp* actor, MKMessage* msg);

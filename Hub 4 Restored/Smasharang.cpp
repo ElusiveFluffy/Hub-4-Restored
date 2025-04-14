@@ -9,8 +9,8 @@
 //TygerMemory
 #include "core.h"
 
-GameObjectMsg_t Original_SpyEggHit;
-GameObjectMsg_t Original_E4MetalDoorEvent;
+GameObject::GameObjectMsg_t Original_SpyEggHit;
+GameObject::GameObjectMsg_t Original_E4MetalDoorEvent;
 
 //Random kinda pointless thing just to have it match Ty 2 xD
 void __fastcall SpyEggHit(GameObject::MKProp* spyEggActor, void* edx, MKMessage* msg) {

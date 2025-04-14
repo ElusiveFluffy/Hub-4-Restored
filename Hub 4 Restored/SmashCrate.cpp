@@ -4,6 +4,7 @@
 #include "Rangs.h"
 #include "Hub4SFX.h"
 #include "MinHook.h"
+#include "TyFunctions.h"
 
 //TygerMemory
 #include "core.h"
@@ -17,10 +18,53 @@ InitGlobalModelStats_t InitGlobalModelStats;
 typedef void(__thiscall* SetPreviousGameObject_t)(GameObject::GameObjDesc** previousGameObjectDesc, GameObject::GameObjDesc* gameObjectDesc);
 SetPreviousGameObject_t SetPreviousGameObject;
 
-GameObjectMsg_t OriginalCrateMsg;
+GameObject::GetMKPropRange_t GetMKPropRange;
+
+TyFunctions::VoidFunction_t OriginalCrate_CheckOpals;
+GameObject::GameObjectMsg_t OriginalCrateMsg;
 
 typedef void (*InitCrateGameObjects_t)(char* globalModel);
 InitCrateGameObjects_t OriginalCrateObjectInit;
+
+void Crate_CheckOpals() {
+	//Run the Original Function for the wooden crate and B3 crate
+	OriginalCrate_CheckOpals();
+
+	//(Logic recreated from the game, was a bit simpler)
+	//Maybe some valid state check, don't really know what it is, but the game checks this too
+	if (*(bool*)(Core::moduleBase + 0x280418)) {
+		CrateMKProp* crateProps[2];
+		//Casts are required for a **, even though it inherits the base struct
+		GetMKPropRange(&SmashCrate::GameObj, (GameObject::MKProp**)crateProps);
+		CrateMKProp* crate = crateProps[0];
+
+		while (crate < crateProps[1]) {
+			if (crate == 0)
+				break;
+
+			int totalCollected = 0;
+
+			if (crate->OpalCount > 0) {
+				for (int i = 0; i < crate->OpalCount; i++) {
+					OpalMKProp* opal = crate->OpalMKProps[i];
+
+					if (opal && opal->State == Collected)
+						totalCollected++;
+				}
+			}
+
+			//Hide if all are collected
+			if (crate->OpalCount == totalCollected) {
+				crate->AllOpalsCollected = true;
+				crate->Visible = false;
+				crate->CollisionEnabled = false;
+			}
+
+			//Goes to the next instance, + 1 of its struct size
+			crate += 1;
+		}
+	}
+}
 
 void InitCrateGameObjects(char* globalModel) {
 	OriginalCrateObjectInit(globalModel);
@@ -74,18 +118,18 @@ void SmashCrate::HookFunctions()
 	}
 }
 
-void HookInitFunction() {
-	MH_STATUS minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x60860), &InitCrateGameObjects, reinterpret_cast<LPVOID*>(&OriginalCrateObjectInit));
-	if (minHookStatus != MH_OK) {
-		return;
-	}
+void HookEarlyInitFunction() {
+	MH_CreateHook((LPVOID*)(Core::moduleBase + 0x60860), &InitCrateGameObjects, reinterpret_cast<LPVOID*>(&OriginalCrateObjectInit));
+	MH_CreateHook((LPVOID*)(Core::moduleBase + 0x603f0), &Crate_CheckOpals, reinterpret_cast<LPVOID*>(&OriginalCrate_CheckOpals));
 }
 
 void SmashCrate::EarlyInit()
 {
-	HookInitFunction();
+	HookEarlyInitFunction();
 
 	InitCrateActor = (InitCrateActor_t)(Core::moduleBase + 0x13af00);
 	InitGlobalModelStats = (InitGlobalModelStats_t)(Core::moduleBase + 0x13af80);
 	SetPreviousGameObject = (SetPreviousGameObject_t)(Core::moduleBase + 0xf8cb0);
+
+	GetMKPropRange = (GameObject::GetMKPropRange_t)(Core::moduleBase + 0xf8600);
 }
