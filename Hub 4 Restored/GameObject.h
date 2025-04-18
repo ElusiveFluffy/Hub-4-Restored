@@ -1,5 +1,5 @@
 #pragma once
-#include "vector4f.h"
+#include "Model.h"
 #include "MKMessage.h"
 
 namespace GameObject
@@ -18,17 +18,11 @@ namespace GameObject
         UINT SearchMask;
         int DrawLayer;
         UINT Flags;
-        struct BoundingVolume* pVolume;
+        BoundingVolume* pVolume;
         int unk;
         float MaxScissorDist;
-        struct MKPropDescriptor* pNext;
+        MKPropDescriptor* pNext;
         void* MKProps;
-    };
-    struct ActorData
-    {
-        char _0[0x40];
-        char _40[0x34];
-        Vector4f Position;
     };
     struct MKPropVTable
     {
@@ -45,7 +39,20 @@ namespace GameObject
     {
         MKPropVTable* VTable;
         MKPropDescriptor* pDescriptor;
-        ActorData* Actor;
+        Model* pModel;
+        Matrix* pLocalToWorld;
+        int Flags;
+        int UniqueID;
+        char _18[0xc];
+        char _24[4];
+        char _28[4];
+        float DistSquared;
+        MKProp* pNext;
+        MKProp* pPrev;
+        MKProp* pPrevUpdated;
+        MKProp* pNextUpdated;
+        //Seems to be unused most of the time
+        MKProp* pNextOfThisType;
     };
 
     enum ModuleOverrideFuncFlags
@@ -143,5 +150,5 @@ namespace GameObject
     void APIInit();
 
     typedef void(__thiscall* GameObjectMsg_t)(MKProp* actor, MKMessage* msg);
-    typedef MKProp** (__thiscall* GetMKPropRange_t)(GameObjDesc* gameObjDesc, MKProp* pOutProp[2]);
+    typedef void(__thiscall* GetMKPropRange_t)(GameObjDesc* gameObjDesc, MKProp* pOutProp[2]);
 };

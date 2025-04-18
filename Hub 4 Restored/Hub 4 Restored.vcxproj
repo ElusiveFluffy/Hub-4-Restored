@@ -166,12 +166,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="CustomTyDev.h" />
     <ClInclude Include="Flamerang.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Hub4SFX.h" />
     <ClInclude Include="Include\ini.h" />
     <ClInclude Include="MKMessage.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="NumUtil.h" />
     <ClInclude Include="Collectables.h" />
     <ClInclude Include="framework.h" />

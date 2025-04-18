@@ -13,8 +13,7 @@ enum OpalState
 
 struct OpalMKProp : GameObject::MKProp
 {
-    char _c[0x34];
-    char _40[0x38];
+    char _44[0x34];
     OpalState State;
     char _7c[4];
     char _80[0x40];
@@ -23,8 +22,7 @@ struct OpalMKProp : GameObject::MKProp
 };
 struct CrateMKProp : GameObject::MKProp
 {
-    char _c[0x34];
-    char _40[8];
+    char _44[4];
     bool CollisionEnabled;
     char _49[0x37];
     char _80[0x40];
