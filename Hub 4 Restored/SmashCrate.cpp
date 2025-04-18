@@ -8,6 +8,7 @@
 
 //TygerMemory
 #include "core.h"
+#include "hero.h"
 
 //Functions
 typedef void(__thiscall* InitCrateActor_t)(GameObject::GameObjDesc* gameObjectDesc, GameObject::ModuleInfo* moduleInfo, const char* mdlName, const char* aliasName, int searchMask, int flags);
@@ -80,7 +81,7 @@ void InitCrateGameObjects(char* globalModel) {
 	SetPreviousGameObject(previousGameObj, &SmashCrate::GameObj);
 }
 
-void __fastcall CrateMsg(GameObject::MKProp* crate, void* edx, MKMessage* msg) {
+void __fastcall CrateMsg(CrateMKProp* crate, void* edx, MKMessage* msg) {
 	if (!crate->pDescriptor) {
 		OriginalCrateMsg(crate, msg);
 		return;
@@ -89,8 +90,10 @@ void __fastcall CrateMsg(GameObject::MKProp* crate, void* edx, MKMessage* msg) {
 	char* aliasName = crate->pDescriptor->AliasName;
 	bool smashCrate = _stricmp(aliasName, "SmashCrate") == 0;
 	bool smashCrateRang = Rangs::GetCurrentRang() == Rangs::Smasharang || Rangs::GetCurrentRang() == Rangs::Kaboomerang;
+	//Only not regular biting, charge biting is intended
+	bool notBiting = Hero::getState() != (int)TyState::Biting || Hero::isChargeBiting();
 
-	if (smashCrate && (msg->MsgID == ExplosionMsg || msg->MsgID == Break)) {
+	if (smashCrate && (msg->MsgID == ExplosionMsg || msg->MsgID == Break) && notBiting) {
 		//Change sfx
 		Hub4SFX::GlobalSound newSound = Hub4SFX::SmashCrateSmash;
 		Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x5f791), &newSound, 4);
@@ -103,7 +106,7 @@ void __fastcall CrateMsg(GameObject::MKProp* crate, void* edx, MKMessage* msg) {
 	}
 	else if (smashCrate && msg->MsgID == BoomerangMsg && smashCrateRang)
 		OriginalCrateMsg(crate, msg);
-	else if (msg->MsgID != BoomerangMsg || !smashCrate)
+	else if ((msg->MsgID != BoomerangMsg && notBiting) || !smashCrate)
 		OriginalCrateMsg(crate, msg);
 }
 
