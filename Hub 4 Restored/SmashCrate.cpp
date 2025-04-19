@@ -93,7 +93,7 @@ void __fastcall CrateMsg(CrateMKProp* crate, void* edx, MKMessage* msg) {
 	//Only not regular biting, charge biting is intended
 	bool notBiting = Hero::getState() != (int)TyState::Biting || Hero::isChargeBiting();
 
-	if (smashCrate && (msg->MsgID == ExplosionMsg || msg->MsgID == Break) && notBiting) {
+	if (smashCrate && (msg->MsgID == MSG_ExplosionMsg || msg->MsgID == MSG_Shatter) && notBiting) {
 		//Change sfx
 		Hub4SFX::GlobalSound newSound = Hub4SFX::SmashCrateSmash;
 		Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x5f791), &newSound, 4);
@@ -104,9 +104,9 @@ void __fastcall CrateMsg(CrateMKProp* crate, void* edx, MKMessage* msg) {
 		GlobalSound originalSound = GlobalSound::CrateSmash;
 		Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x5f791), &originalSound, 4);
 	}
-	else if (smashCrate && msg->MsgID == BoomerangMsg && smashCrateRang)
+	else if (smashCrate && msg->MsgID == MSG_BoomerangMsg && smashCrateRang)
 		OriginalCrateMsg(crate, msg);
-	else if ((msg->MsgID != BoomerangMsg && notBiting) || !smashCrate)
+	else if ((msg->MsgID != MSG_BoomerangMsg && notBiting) || !smashCrate)
 		OriginalCrateMsg(crate, msg);
 }
 

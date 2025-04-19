@@ -16,16 +16,16 @@ GameObject::GameObjectMsg_t Original_E4MetalDoorEvent;
 void __fastcall SpyEggHit(GameObject::MKProp* spyEggActor, void* edx, MKMessage* msg) {
 	//Only change it to a event id of 9 to break it if its the smasharang
 	//For rangs the event id will always be set to 8
-	if (msg->MsgID == BoomerangMsg && Rangs::GetCurrentRang() == Rangs::Smasharang)
-		msg->MsgID = ExplosionMsg;
+	if (msg->MsgID == MSG_BoomerangMsg && Rangs::GetCurrentRang() == Rangs::Smasharang)
+		msg->MsgID = MSG_ExplosionMsg;
 	Original_SpyEggHit(spyEggActor, msg);
 }
 
 void __fastcall E4MetalDoorEvent(GameObject::MKProp* metalDoorActor, void* edx, MKMessage* msg) {
-	if (msg->MsgID == ExplosionMsg || (msg->MsgID == BoomerangMsg && (Rangs::GetCurrentRang() == Rangs::Smasharang || Rangs::GetCurrentRang() == Rangs::Kaboomerang)))
+	if (msg->MsgID == MSG_ExplosionMsg || (msg->MsgID == MSG_BoomerangMsg && (Rangs::GetCurrentRang() == Rangs::Smasharang || Rangs::GetCurrentRang() == Rangs::Kaboomerang)))
 		Original_E4MetalDoorEvent(metalDoorActor, msg);
 	//Don't run the rang event if it isn't the smasharang or kaboomerang
-	else if (msg->MsgID != BoomerangMsg)
+	else if (msg->MsgID != MSG_BoomerangMsg)
 		Original_E4MetalDoorEvent(metalDoorActor, msg);
 }
 
