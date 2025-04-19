@@ -172,6 +172,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Hub4SFX.h" />
     <ClInclude Include="Include\ini.h" />
+    <ClInclude Include="KromeIni.h" />
     <ClInclude Include="MKMessage.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="NumUtil.h" />

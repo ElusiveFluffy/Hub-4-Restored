@@ -1,15 +1,11 @@
 #pragma once
 #include "Model.h"
 #include "MKMessage.h"
+#include "KromeIni.h"
 
 namespace GameObject
 {
-    struct GameObjDescVTable
-    {
-        void* Init;
-        void* Load;
-        void* ConstructObject;
-    };
+    struct MKProp;
     struct MKPropDescriptor
     {
         char* AliasName;
@@ -22,7 +18,7 @@ namespace GameObject
         int unk;
         float MaxScissorDist;
         MKPropDescriptor* pNext;
-        void* MKProps;
+        MKProp* pProps;
     };
     struct MKPropVTable
     {
@@ -64,8 +60,10 @@ namespace GameObject
     struct ModuleInfoVTable
     {
         void(__thiscall* Init)();
-        void (*ConstructObject)(void* ptr);
+        void(*ConstructObject)(MKProp* ptr);
     };
+
+    struct ModuleInfo;
     struct ModuleInfoBaseObject
     {
         void (*InitModule)();
@@ -79,7 +77,7 @@ namespace GameObject
         bool Update;
         char _21[3];
         ModuleOverrideFuncFlags Flags;
-        void* ModuleInfopNext;
+        ModuleInfo* pNext;
     };
     struct ModuleInfo
     {
@@ -123,6 +121,14 @@ namespace GameObject
         char _22[2];
         LODDescriptor lodDesc;
         enum CollisionInfoFlags collisionInfoFlags;
+    };
+
+    struct GameObjDesc;
+    struct GameObjDescVTable
+    {
+        void(__thiscall* Init)(GameObjDesc* gameObjDesc, ModuleInfo* moduleInfo, char* mdlName, char* aliasName, int searchMask, int flags);
+        void(__thiscall* Load)(GameObjDesc* gameObjDesc, KromeIni* pIni);
+        void(__fastcall* ConstructObject)(GameObjDesc* gameObjeDesc);
     };
     struct GameObjDesc
     {
