@@ -168,11 +168,13 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="CustomTyDev.h" />
+    <ClInclude Include="Fireworks.h" />
     <ClInclude Include="Flamerang.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Hub4SFX.h" />
     <ClInclude Include="Include\ini.h" />
     <ClInclude Include="KromeIni.h" />
+    <ClInclude Include="MKMemory.h" />
     <ClInclude Include="MKMessage.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="NumUtil.h" />
@@ -190,12 +192,14 @@
     <ClInclude Include="Smasharang.h" />
     <ClInclude Include="SmashCrate.h" />
     <ClInclude Include="Smashrock.h" />
+    <ClInclude Include="StaticProp.h" />
     <ClInclude Include="TyFunctions.h" />
     <ClInclude Include="TyMemoryValues.h" />
     <ClInclude Include="UIStructs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CustomTyDev.cpp" />
+    <ClCompile Include="Fireworks.cpp" />
     <ClCompile Include="Flamerang.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Hub4SFX.cpp" />
@@ -217,6 +221,7 @@
     <ClCompile Include="Smasharang.cpp" />
     <ClCompile Include="SmashCrate.cpp" />
     <ClCompile Include="Smashrock.cpp" />
+    <ClCompile Include="StaticProp.cpp" />
     <ClCompile Include="TyFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>

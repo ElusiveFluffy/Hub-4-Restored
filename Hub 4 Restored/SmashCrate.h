@@ -1,5 +1,5 @@
 #pragma once
-#include "GameObject.h"
+#include "StaticProp.h"
 
 enum OpalState
 {
@@ -11,7 +11,7 @@ enum OpalState
     Collected = 0x5
 };
 
-struct OpalMKProp : GameObject::MKProp
+struct OpalMKProp : StaticProp
 {
     char _44[0x34];
     OpalState State;
@@ -20,7 +20,7 @@ struct OpalMKProp : GameObject::MKProp
     char _c0[0x40];
     char _100[0x14];
 };
-struct CrateMKProp : GameObject::MKProp
+struct CrateMKProp : StaticProp
 {
     char _44[4];
     bool CollisionEnabled;
@@ -41,7 +41,8 @@ struct CrateMKProp : GameObject::MKProp
 
 namespace SmashCrate
 {
-	inline GameObject::GameObjDesc GameObj{};
+	inline StaticPropDesc GameObj{};
+    void InitGameObject(KromeIni* globalModel);
 	void HookFunctions();
 	void EarlyInit();
 };

@@ -12,6 +12,7 @@
 #include "GameObject.h"
 #include "Hub4SFX.h"
 #include "Options.h"
+#include "MKMemory.h"
 
 #include "MinHook.h"
 
@@ -53,7 +54,7 @@ bool PluginCore::Setup()
 
     CustomTyDev::OverrideTyDev();
 
-    GameObject::APIInit();
+    GameObj::APIInit();
 
     Rangs::HookRangFunctions();
     Rangs::RangSpecificSetup();
@@ -69,8 +70,10 @@ void PluginCore::EarlyInit()
     Core::initialize(GetModuleHandle(0));
     if (!InitMinHook())
         return;
+    MKMemory::SetFunctions();
+
     Rangs::SetupRangStructs();
-    GameObject::EarlyInit();
+    GameObj::EarlyInit();
 
     Hub4SFX::UpdateGlobalSoundCount();
 

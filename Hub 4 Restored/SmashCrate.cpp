@@ -5,27 +5,22 @@
 #include "Hub4SFX.h"
 #include "MinHook.h"
 #include "TyFunctions.h"
+#include "Fireworks.h"
 
 //TygerMemory
 #include "core.h"
 #include "hero.h"
 
 //Functions
-typedef void(__thiscall* InitCrateActor_t)(GameObject::GameObjDesc* gameObjectDesc, GameObject::ModuleInfo* moduleInfo, const char* mdlName, const char* aliasName, int searchMask, int flags);
+typedef void(__thiscall* InitCrateActor_t)(GameObjDesc* gameObjectDesc, ModuleInfoBase* moduleInfo, const char* mdlName, const char* aliasName, int searchMask, int flags);
 InitCrateActor_t InitCrateActor;
 //Not 100% sure, but seems to set some things from global.model
-typedef void(__thiscall* InitGlobalModelStats_t)(GameObject::GameObjDesc* gameObjectDesc, char* globalModel);
-InitGlobalModelStats_t InitGlobalModelStats;
-typedef void(__thiscall* SetPreviousGameObject_t)(GameObject::GameObjDesc** previousGameObjectDesc, GameObject::GameObjDesc* gameObjectDesc);
-SetPreviousGameObject_t SetPreviousGameObject;
+GameObjDescLoad_t InitGlobalModelStats;
 
-GameObject::GetMKPropRange_t GetMKPropRange;
+GetMKPropRange_t GetMKPropRange;
 
 TyFunctions::VoidFunction_t OriginalCrate_CheckOpals;
-GameObject::GameObjectMsg_t OriginalCrateMsg;
-
-typedef void (*InitCrateGameObjects_t)(char* globalModel);
-InitCrateGameObjects_t OriginalCrateObjectInit;
+GameObjectMsg_t OriginalCrateMsg;
 
 void Crate_CheckOpals() {
 	//Run the Original Function for the wooden crate and B3 crate
@@ -36,7 +31,7 @@ void Crate_CheckOpals() {
 	if (*(bool*)(Core::moduleBase + 0x280418)) {
 		CrateMKProp* crateProps[2];
 		//Casts are required for a **, even though it inherits the base struct
-		GetMKPropRange(&SmashCrate::GameObj, (GameObject::MKProp**)crateProps);
+		GetMKPropRange(&SmashCrate::GameObj, (GameObject**)crateProps);
 		CrateMKProp* crate = crateProps[0];
 
 		while (crate < crateProps[1]) {
@@ -67,18 +62,15 @@ void Crate_CheckOpals() {
 	}
 }
 
-void InitCrateGameObjects(char* globalModel) {
-	OriginalCrateObjectInit(globalModel);
-
+void SmashCrate::InitGameObject(KromeIni* globalModel) {
 	//Smashcrate
 	//Need to manually set the vtable
-	SmashCrate::GameObj.vTable = (GameObject::GameObjDescVTable*)(Core::moduleBase + 0x1fafd4);
-	GameObject::ModuleInfo* crateModule = (GameObject::ModuleInfo*)(Core::moduleBase + 0x25520c);
+	memcpy(&SmashCrate::GameObj, (void*)(Core::moduleBase + 0x254c40), 4);
+	ModuleInfoBase* crateModule = (ModuleInfoBase*)(Core::moduleBase + 0x25520c);
 	InitCrateActor(&SmashCrate::GameObj, crateModule, "P0934_SmashCrate", "SmashCrate", 0x41, 1);
 	InitGlobalModelStats(&SmashCrate::GameObj, globalModel);
-	SmashCrate::GameObj.StaticPropDesc.collisionInfoFlags = GameObject::NoIce;
-	GameObject::GameObjDesc** previousGameObj = (GameObject::GameObjDesc**)(Core::moduleBase + 0x288738);
-	SetPreviousGameObject(previousGameObj, &SmashCrate::GameObj);
+	SmashCrate::GameObj.collisionInfoFlags = NoIce;
+	SetPreviousGameObject(GameObj::PreviousGameObj, &SmashCrate::GameObj);
 }
 
 void __fastcall CrateMsg(CrateMKProp* crate, void* edx, MKMessage* msg) {
@@ -122,7 +114,6 @@ void SmashCrate::HookFunctions()
 }
 
 void HookEarlyInitFunction() {
-	MH_CreateHook((LPVOID*)(Core::moduleBase + 0x60860), &InitCrateGameObjects, reinterpret_cast<LPVOID*>(&OriginalCrateObjectInit));
 	MH_CreateHook((LPVOID*)(Core::moduleBase + 0x603f0), &Crate_CheckOpals, reinterpret_cast<LPVOID*>(&OriginalCrate_CheckOpals));
 }
 
@@ -131,8 +122,8 @@ void SmashCrate::EarlyInit()
 	HookEarlyInitFunction();
 
 	InitCrateActor = (InitCrateActor_t)(Core::moduleBase + 0x13af00);
-	InitGlobalModelStats = (InitGlobalModelStats_t)(Core::moduleBase + 0x13af80);
+	InitGlobalModelStats = (GameObjDescLoad_t)(Core::moduleBase + 0x13af80);
 	SetPreviousGameObject = (SetPreviousGameObject_t)(Core::moduleBase + 0xf8cb0);
 
-	GetMKPropRange = (GameObject::GetMKPropRange_t)(Core::moduleBase + 0xf8600);
+	GetMKPropRange = (GetMKPropRange_t)(Core::moduleBase + 0xf8600);
 }

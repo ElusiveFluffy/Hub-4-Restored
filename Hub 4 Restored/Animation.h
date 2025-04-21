@@ -5,7 +5,7 @@
 
 struct Matrix
 {
-    float Data[0x4][0x3];
+    float Data[0x3][0x4];
     Vector4f Position;
 };
 struct AnimationTemplate

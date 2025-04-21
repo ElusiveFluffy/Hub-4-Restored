@@ -4,7 +4,6 @@ using namespace Smashrock;
 #include "MinHook.h"
 #include "TygerFrameworkAPI.hpp"
 #include "GameObject.h"
-using namespace GameObject;
 
 //TygerMemory
 #include "core.h"
