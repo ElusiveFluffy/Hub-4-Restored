@@ -5,6 +5,8 @@
 #include "MKMemory.h"
 #include "TyFunctions.h"
 
+inline RGBA D1PropColour = { 0.4f, 0.4f, 0.7f, 1.0f };
+
 struct MKProp;
 struct MKPropDescriptor
 {

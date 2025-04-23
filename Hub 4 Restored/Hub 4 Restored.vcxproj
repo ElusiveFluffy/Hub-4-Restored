@@ -196,6 +196,8 @@
     <ClInclude Include="TyFunctions.h" />
     <ClInclude Include="TyMemoryValues.h" />
     <ClInclude Include="UIStructs.h" />
+    <ClInclude Include="WaterTank.h" />
+    <ClInclude Include="Windmill.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CustomTyDev.cpp" />
@@ -223,6 +225,8 @@
     <ClCompile Include="Smashrock.cpp" />
     <ClCompile Include="StaticProp.cpp" />
     <ClCompile Include="TyFunctions.cpp" />
+    <ClCompile Include="WaterTank.cpp" />
+    <ClCompile Include="Windmill.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def" />

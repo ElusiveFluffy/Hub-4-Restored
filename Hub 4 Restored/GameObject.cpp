@@ -4,6 +4,8 @@
 #include "Smashrock.h"
 #include "SmashCrate.h"
 #include "Fireworks.h"
+#include "WaterTank.h"
+#include "Windmill.h"
 #include "MinHook.h"
 
 //Just using the crate one since I already have the address from the hook with the smashcrate
@@ -19,6 +21,9 @@ void InitGameObjects(KromeIni* globalModel) {
 
 void HookFunctions() {
 	MH_CreateHook((LPVOID*)(Core::moduleBase + 0x60860), &InitGameObjects, reinterpret_cast<LPVOID*>(&OriginalInitGameObjects));
+
+	WaterTank::HookFunctions();
+	Windmill::HookFunctions();
 }
 
 void GameObj::EarlyInit()
