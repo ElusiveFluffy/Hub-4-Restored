@@ -7,7 +7,6 @@
 #include "Collectables.h"
 #include "Levels.h"
 #include "SaveFile.h"
-#include "Rangs.h"
 #include "CustomTyDev.h"
 #include "GameObject.h"
 #include "Hub4SFX.h"
@@ -56,9 +55,6 @@ bool PluginCore::Setup()
 
     GameObj::APIInit();
 
-    Rangs::HookRangFunctions();
-    Rangs::RangSpecificSetup();
-
     if (!EnableAllHooks())
         return false;
 
@@ -72,7 +68,6 @@ void PluginCore::EarlyInit()
         return;
     MKMemory::SetFunctions();
 
-    Rangs::SetupRangStructs();
     GameObj::EarlyInit();
 
     Hub4SFX::UpdateGlobalSoundCount();

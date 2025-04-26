@@ -6,6 +6,7 @@
 #include "Fireworks.h"
 #include "WaterTank.h"
 #include "Windmill.h"
+#include "Rangs.h"
 #include "MinHook.h"
 
 //Just using the crate one since I already have the address from the hook with the smashcrate
@@ -28,6 +29,8 @@ void HookFunctions() {
 
 void GameObj::EarlyInit()
 {
+	Rangs::SetupRangStructs();
+
 	//Make sure to set these first for anything the uses them afterwards
 	AddToModuleList = (AddToModuleList_t)(Core::moduleBase + 0xf85c0);
 
@@ -55,6 +58,9 @@ void GameObj::APIInit()
 {
 	Smashrock::SmashrockInit();
 	SmashCrate::HookFunctions();
+
+	Rangs::HookRangFunctions();
+	Rangs::RangSpecificSetup();
 }
 
 void ModuleInfoBase::Reset()
