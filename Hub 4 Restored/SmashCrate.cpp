@@ -81,25 +81,36 @@ void __fastcall CrateMsg(CrateMKProp* crate, void* edx, MKMessage* msg) {
 
 	char* aliasName = crate->pDescriptor->AliasName;
 	bool smashCrate = _stricmp(aliasName, "SmashCrate") == 0;
-	bool smashCrateRang = Rangs::GetCurrentRang() == Rangs::Smasharang || Rangs::GetCurrentRang() == Rangs::Kaboomerang;
-	//Only not regular biting, charge biting is intended
-	bool notBiting = Hero::getState() != (int)TyState::Biting || Hero::isChargeBiting();
 
-	if (smashCrate && (msg->MsgID == MSG_ExplosionMsg || msg->MsgID == MSG_Shatter) && notBiting) {
-		//Change sfx
-		Hub4SFX::GlobalSound newSound = Hub4SFX::SmashCrateSmash;
-		Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x5f791), &newSound, 4);
+	if (smashCrate) {
+		//Stop the zappyrang's constant shatter message breaking the crate
+		if (Rangs::IsCurrentRang(Rangs::Zappyrang) && !Hero::isChargeBiting() && msg->MsgID == MSG_Shatter)
+			return;
 
-		//Now run the original function with the changed sfx
-		OriginalCrateMsg(crate, msg);
-		//Change the sfx back
-		GlobalSound originalSound = GlobalSound::CrateSmash;
-		Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x5f791), &originalSound, 4);
+		bool smashCrateRang = Rangs::IsCurrentRang(Rangs::Smasharang) || Rangs::IsCurrentRang(Rangs::Kaboomerang);
+		//Only not regular biting, charge biting is intended
+		bool notBiting = Hero::getState() != (int)TyState::Biting || Hero::isChargeBiting();
+
+		if ((msg->MsgID == MSG_ExplosionMsg || msg->MsgID == MSG_Shatter) && notBiting) {
+			//Change sfx
+			Hub4SFX::GlobalSound newSound = Hub4SFX::SmashCrateSmash;
+			Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x5f791), &newSound, 4);
+
+			//Now run the original function with the changed sfx
+			OriginalCrateMsg(crate, msg);
+			//Change the sfx back
+			GlobalSound originalSound = GlobalSound::CrateSmash;
+			Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x5f791), &originalSound, 4);
+		}
+		else if (msg->MsgID == MSG_BoomerangMsg && smashCrateRang)
+			OriginalCrateMsg(crate, msg);
+		else if (msg->MsgID != MSG_BoomerangMsg && notBiting)
+			OriginalCrateMsg(crate, msg);
 	}
-	else if (smashCrate && msg->MsgID == MSG_BoomerangMsg && smashCrateRang)
+	else {
+		//Do the regular crate logic if its not a smashcrate
 		OriginalCrateMsg(crate, msg);
-	else if ((msg->MsgID != MSG_BoomerangMsg && notBiting) || !smashCrate)
-		OriginalCrateMsg(crate, msg);
+	}
 }
 
 //API Initialized, less time sensitive

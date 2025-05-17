@@ -95,6 +95,9 @@ namespace Rangs
 	void SetupRangStructs();
 	void HookRangFunctions();
 	Boomerangs GetCurrentRang();
+	inline bool IsCurrentRang(Boomerangs rangToCheck) {
+		return GetCurrentRang() == rangToCheck;
+	}
 	void RangSpecificSetup();
 };
 
