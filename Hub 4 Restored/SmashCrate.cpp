@@ -21,6 +21,7 @@ GetMKPropRange_t GetMKPropRange;
 
 TyFunctions::VoidFunction_t OriginalCrate_CheckOpals;
 GameObjectMsg_t OriginalCrateMsg;
+GameObjectVoid_t OriginalCrateUpdate;
 
 void Crate_CheckOpals() {
 	//Run the Original Function for the wooden crate and B3 crate
@@ -73,6 +74,36 @@ void SmashCrate::InitGameObject(KromeIni* globalModel) {
 	SetPreviousGameObject(GameObj::PreviousGameObj, &SmashCrate::GameObj);
 }
 
+bool UsingSmashCrateRang() {
+	return Rangs::IsCurrentRang(Rangs::Smasharang) || Rangs::IsCurrentRang(Rangs::Kaboomerang);
+}
+
+void __fastcall CrateUpdate(CrateMKProp* crate) {
+	if (!crate->pDescriptor) {
+		OriginalCrateUpdate(crate);
+		return;
+	}
+
+	char* aliasName = crate->pDescriptor->AliasName;
+	bool smashCrate = _stricmp(aliasName, "SmashCrate") == 0;
+	//Seems to work fine for bites on the ground, but air bites still target the crate while holding a smashcrate rang
+	bool biting = Hero::getState() == (int)TyState::Biting;
+
+	//Disable auto targetting on the smash crates if not charge biting or not using a smashcrate rang
+	if (smashCrate && (!UsingSmashCrateRang() || biting) && !Hero::isChargeBiting()) {
+		BYTE jumpCode[2] = { 0xEB, 0x48 };
+		Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x5f692), &jumpCode, 2);
+
+		OriginalCrateUpdate(crate);
+
+		//Restore the original opcode
+		jumpCode[0] = 0x83; jumpCode[1] = 0xBE;
+		Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x5f692), &jumpCode, 2);
+	}
+	else
+		OriginalCrateUpdate(crate);
+}
+
 void __fastcall CrateMsg(CrateMKProp* crate, void* edx, MKMessage* msg) {
 	if (!crate->pDescriptor) {
 		OriginalCrateMsg(crate, msg);
@@ -87,7 +118,6 @@ void __fastcall CrateMsg(CrateMKProp* crate, void* edx, MKMessage* msg) {
 		if (Rangs::IsCurrentRang(Rangs::Zappyrang) && !Hero::isChargeBiting() && msg->MsgID == MSG_Shatter)
 			return;
 
-		bool smashCrateRang = Rangs::IsCurrentRang(Rangs::Smasharang) || Rangs::IsCurrentRang(Rangs::Kaboomerang);
 		//Only not regular biting, charge biting is intended
 		bool notBiting = Hero::getState() != (int)TyState::Biting || Hero::isChargeBiting();
 
@@ -102,7 +132,7 @@ void __fastcall CrateMsg(CrateMKProp* crate, void* edx, MKMessage* msg) {
 			GlobalSound originalSound = GlobalSound::CrateSmash;
 			Core::SetReadOnlyValue((int*)(Core::moduleBase + 0x5f791), &originalSound, 4);
 		}
-		else if (msg->MsgID == MSG_BoomerangMsg && smashCrateRang)
+		else if (msg->MsgID == MSG_BoomerangMsg && UsingSmashCrateRang())
 			OriginalCrateMsg(crate, msg);
 		else if (msg->MsgID != MSG_BoomerangMsg && notBiting)
 			OriginalCrateMsg(crate, msg);
@@ -120,6 +150,12 @@ void SmashCrate::HookFunctions()
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
 		API::LogPluginMessage("Failed to Create the Crate Msg Function Hook, With the Error: " + error, Error);
+		return;
+	}
+	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x5f580), &CrateUpdate, reinterpret_cast<LPVOID*>(&OriginalCrateUpdate));
+	if (minHookStatus != MH_OK) {
+		std::string error = MH_StatusToString(minHookStatus);
+		API::LogPluginMessage("Failed to Create the Crate Update Function Hook, With the Error: " + error, Error);
 		return;
 	}
 }
