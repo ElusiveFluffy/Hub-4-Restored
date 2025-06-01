@@ -83,22 +83,36 @@ void __fastcall CrateUpdate(CrateMKProp* crate) {
 		OriginalCrateUpdate(crate);
 		return;
 	}
-
+	
 	char* aliasName = crate->pDescriptor->AliasName;
 	bool smashCrate = _stricmp(aliasName, "SmashCrate") == 0;
-	//Seems to work fine for bites on the ground, but air bites still target the crate while holding a smashcrate rang
-	bool biting = Hero::getState() == (int)TyState::Biting;
+	
+	//Disable bite auto targetting on the smashcrates if not charge biting or rang targeting if not using a smashcrate rang
+	if (smashCrate && !Hero::isChargeBiting()) {
+		if (!UsingSmashCrateRang())
+		{
+			//Just completely jumps past the AutoTargetStruct::Set function
+			BYTE jumpCode[2] = { 0xEB, 0x48 };
+			Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x5f692), &jumpCode, 2);
 
-	//Disable auto targetting on the smash crates if not charge biting or not using a smashcrate rang
-	if (smashCrate && (!UsingSmashCrateRang() || biting) && !Hero::isChargeBiting()) {
-		BYTE jumpCode[2] = { 0xEB, 0x48 };
-		Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x5f692), &jumpCode, 2);
+			OriginalCrateUpdate(crate);
+
+			//Restore the original opcode
+			jumpCode[0] = 0x83; jumpCode[1] = 0xBE;
+			Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x5f692), &jumpCode, 2);
+			//No need to run the other code change
+			return;
+		}
+
+		//Disable biting auto targeting (changes a je to a jmp so it always sets the bite target to a nullptr)
+		BYTE jumpCode = 0xEB;
+		Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x5f6cd), &jumpCode, 1);
 
 		OriginalCrateUpdate(crate);
 
 		//Restore the original opcode
-		jumpCode[0] = 0x83; jumpCode[1] = 0xBE;
-		Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x5f692), &jumpCode, 2);
+		jumpCode = 0x74;
+		Core::SetReadOnlyValue((void*)(Core::moduleBase + 0x5f6cd), &jumpCode, 1);
 	}
 	else
 		OriginalCrateUpdate(crate);
