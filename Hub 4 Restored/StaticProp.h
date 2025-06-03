@@ -1,12 +1,7 @@
 #pragma once
 #include "GameObject.h"
+#include "Collision.h"
 
-enum CollisionInfoFlags
-{
-    Grabable = 0x1,
-    NoIce = 0x2,
-    JumpCamera = 0x4
-};
 struct LODEntry
 {
     char name[0x20];
@@ -29,12 +24,6 @@ struct LODDescriptor
     float MinAlpha;
     float MaxScissorDist;
 };
-struct CollisionInfo
-{
-    bool Enabled;
-    CollisionInfoFlags Flags;
-    MKProp* pProp;
-};
 struct LODManager
 {
     LODDescriptor* pDescriptor;
@@ -42,6 +31,7 @@ struct LODManager
     int field_8;
 };
 
+#pragma pack(push, 4)
 struct StaticProp : GameObject
 {
     bool Collide;
@@ -53,6 +43,7 @@ struct StaticProp : GameObject
     virtual void Draw();
     virtual void Init(GameObjDesc* pDesc);
 };
+#pragma pack(pop)
 
 inline GameObjDescInit_t TyStaticPropDescInit;
 inline GameObjDescLoad_t TyStaticPropDescLoad;

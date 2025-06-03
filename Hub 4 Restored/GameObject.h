@@ -31,9 +31,11 @@ struct MKProp
     Matrix* pLocalToWorld;
     int Flags;
     int UniqueID;
-    char _18[0xc];
-    char _24[4];
-    char _28[4];
+    char _18[4];
+    char _1c[4];
+    float field_20;
+    float DetailLevel; //Maybe
+    float field_28;
     float DistSquared;
     MKProp* pNext;
     MKProp* pPrev;

@@ -52,7 +52,8 @@ enum MessageID
     MSG_GotExtraHealth = 0x31,
     MSG_FallingOffGeoFluffy = 0x32,
     MSG_TimeAttackStart = 0x33,
-    MSG_TimeAttackEnd = 0x34
+    MSG_TimeAttackEnd = 0x34,
+    MSG_EasterEggAchievement = 0x35
 };
 
 struct MKMessage {

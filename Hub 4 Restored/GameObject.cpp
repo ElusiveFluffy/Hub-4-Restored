@@ -6,6 +6,7 @@
 #include "Fireworks.h"
 #include "WaterTank.h"
 #include "Windmill.h"
+#include "ShadowBat.h"
 #include "Rangs.h"
 #include "MinHook.h"
 
@@ -58,6 +59,8 @@ void GameObj::APIInit()
 {
 	Smashrock::SmashrockInit();
 	SmashCrate::HookFunctions();
+
+	ShadowBat::InitFunctions();
 
 	Rangs::HookRangFunctions();
 	Rangs::RangSpecificSetup();

@@ -3,6 +3,7 @@
 
 struct FireworksMKProp : StaticProp {
 	void Message(MKMessage* pMsg);
+	void Update();
 };
 
 namespace Fireworks {

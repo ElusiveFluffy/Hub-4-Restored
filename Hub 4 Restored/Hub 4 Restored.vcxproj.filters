@@ -28,6 +28,15 @@
     <Filter Include="Source Files\GameObject\Rangs">
       <UniqueIdentifier>{6f5f8708-b500-4875-a577-3b961c44d3b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameObject\Enemy">
+      <UniqueIdentifier>{e296a255-baa2-4040-a4b9-7eda85db5bb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\Enemy">
+      <UniqueIdentifier>{be3e596f-3e77-40e3-a918-572b770d3e9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Structs">
+      <UniqueIdentifier>{08222260-90fc-4530-9633-9de03b3b73c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -75,12 +84,6 @@
     <ClInclude Include="Smasharang.h">
       <Filter>Header Files\GameObject\Rangs</Filter>
     </ClInclude>
-    <ClInclude Include="Flamerang.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UIStructs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Options.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -108,9 +111,6 @@
     <ClInclude Include="Animation.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="KromeIni.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Fireworks.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
@@ -126,8 +126,47 @@
     <ClInclude Include="Windmill.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Hud.h">
+    <ClInclude Include="ShadowBat.h">
+      <Filter>Header Files\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyObject.h">
+      <Filter>Header Files\GameObject\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Spline.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="EventMessage.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="UIStructs.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="KromeIni.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatingProp.h">
+      <Filter>Header Files\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="Flamerang.h">
+      <Filter>Header Files\GameObject\Rangs</Filter>
+    </ClInclude>
+    <ClInclude Include="TyPropFunctions.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionStateManager.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="PathManager.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="TightStructPacker.h">
+      <Filter>Header Files\Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -167,9 +206,6 @@
     <ClCompile Include="Rangs.cpp">
       <Filter>Source Files\GameObject\Rangs</Filter>
     </ClCompile>
-    <ClCompile Include="Flamerang.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Options.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -197,7 +233,13 @@
     <ClCompile Include="Windmill.cpp">
       <Filter>Source Files\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Hud.cpp">
+    <ClCompile Include="ShadowBat.cpp">
+      <Filter>Source Files\GameObject\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Flamerang.cpp">
+      <Filter>Source Files\GameObject\Rangs</Filter>
+    </ClCompile>
+    <ClCompile Include="TyPropFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
