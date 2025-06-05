@@ -44,4 +44,6 @@ struct Model
     char _c[0x28];
     RGBA Colour;
     Matrix Matrices;
+
+    BoundingVolume* GetBoundingVolume(int subObjectIndex);
 };

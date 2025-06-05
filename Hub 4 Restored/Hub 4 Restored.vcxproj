@@ -173,6 +173,7 @@
     <ClInclude Include="CustomTyDev.h" />
     <ClInclude Include="EnemyObject.h" />
     <ClInclude Include="EventMessage.h" />
+    <ClInclude Include="FireParticle.h" />
     <ClInclude Include="Fireworks.h" />
     <ClInclude Include="Flamerang.h" />
     <ClInclude Include="GameObject.h" />
@@ -191,6 +192,8 @@
     <ClInclude Include="Levels.h" />
     <ClInclude Include="LevelSelect.h" />
     <ClInclude Include="Options.h" />
+    <ClInclude Include="ParticleSystem.h" />
+    <ClInclude Include="ParticleSystemManager.h" />
     <ClInclude Include="PathManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PluginCore.h" />
@@ -206,16 +209,19 @@
     <ClInclude Include="StaticProp.h" />
     <ClInclude Include="TyFunctions.h" />
     <ClInclude Include="TyMemoryValues.h" />
+    <ClInclude Include="TyRandom.h" />
     <ClInclude Include="UIStructs.h" />
     <ClInclude Include="WaterTank.h" />
     <ClInclude Include="Windmill.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CustomTyDev.cpp" />
+    <ClCompile Include="FireParticle.cpp" />
     <ClCompile Include="Fireworks.cpp" />
     <ClCompile Include="Flamerang.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Hub4SFX.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="NumUtil.cpp" />
     <ClCompile Include="Collectables.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -238,6 +244,7 @@
     <ClCompile Include="Smashrock.cpp" />
     <ClCompile Include="StaticProp.cpp" />
     <ClCompile Include="TyFunctions.cpp" />
+    <ClCompile Include="TyRandom.cpp" />
     <ClCompile Include="WaterTank.cpp" />
     <ClCompile Include="Windmill.cpp" />
   </ItemGroup>

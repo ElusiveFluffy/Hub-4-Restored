@@ -153,5 +153,7 @@ struct ShadowBatProp : EnemyObject
     EventMessage OnDefeated;
     void* SoundBank;
     Material* ShadowCameoMat;
+
+    void Damage();
 };
 TIGHT_PACK_END

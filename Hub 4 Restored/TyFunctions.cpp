@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "TyFunctions.h"
 #include "TyPropFunctions.h"
+#include "FireParticle.h"
+#include "TyRandom.h"
 #include "core.h"
 
 TyFunctions::TyCountOpals_t TyCountOpals;
@@ -16,4 +18,8 @@ void TyFunctions::SetFuntions()
 
 	//Props
 	TyPropFunctions::TyAutoTargetSet = (TyPropFunctions::TyAutoTargetSet_t)(Core::moduleBase + 0x169470);
+
+	FireParticle::InitFunctions();
+
+	TyRandom::InitRandNumFunctions();
 }

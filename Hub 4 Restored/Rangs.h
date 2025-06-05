@@ -86,6 +86,39 @@ namespace Rangs
 		float GroundGlowRadius;
 	};
 
+#pragma pack(push, 1)
+	struct Boomerang
+	{
+		void* VTable;
+		BoomerangDescriptor* RangInfo;
+		char _8[0x14];
+		char _1c[0x24];
+		char _40[4];
+		Vector4f field_44;
+		char _54[4];
+		Boomerangs RangIndex;
+		bool HitSomething;
+		bool RenderParticles;
+		char _5e[2];
+		Vector4f RangPos;
+		void* RangActor;
+		char _74[4];
+		char _78[4];
+		char _7c[4];
+		char _80[8];
+		float PercentOfSplineTravelled;
+		float SplineLength;
+		char field_90;
+		char _91[3];
+		char _94[4];
+		char _98[4];
+		char _9c[4];
+		float field_a0;
+		float field_a4;
+		char _a8[4];
+	};
+#pragma pack(pop)
+
 	//Don't edit this one
 	inline const int OriginalRangCount = 12;
 

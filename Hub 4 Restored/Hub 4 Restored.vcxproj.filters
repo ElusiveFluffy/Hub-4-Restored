@@ -37,6 +37,12 @@
     <Filter Include="Header Files\Structs">
       <UniqueIdentifier>{08222260-90fc-4530-9633-9de03b3b73c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\TyFunctions">
+      <UniqueIdentifier>{01b87c39-91ef-4eb5-9992-5f0c967e1051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TyFunctions">
+      <UniqueIdentifier>{75d313f4-48ac-45e7-92af-64649786719f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -54,16 +60,10 @@
     <ClInclude Include="PluginCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TyMemoryValues.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LevelSelect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Collectables.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TyFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Levels.h">
@@ -153,9 +153,6 @@
     <ClInclude Include="Flamerang.h">
       <Filter>Header Files\GameObject\Rangs</Filter>
     </ClInclude>
-    <ClInclude Include="TyPropFunctions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ActionStateManager.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
@@ -167,6 +164,27 @@
     </ClInclude>
     <ClInclude Include="TightStructPacker.h">
       <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemManager.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="FireParticle.h">
+      <Filter>Header Files\TyFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="TyFunctions.h">
+      <Filter>Header Files\TyFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="TyMemoryValues.h">
+      <Filter>Header Files\TyFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="TyPropFunctions.h">
+      <Filter>Header Files\TyFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="TyRandom.h">
+      <Filter>Header Files\TyFunctions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -183,9 +201,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Collectables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TyFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Levels.cpp">
@@ -239,8 +254,20 @@
     <ClCompile Include="Flamerang.cpp">
       <Filter>Source Files\GameObject\Rangs</Filter>
     </ClCompile>
+    <ClCompile Include="FireParticle.cpp">
+      <Filter>Source Files\TyFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="TyFunctions.cpp">
+      <Filter>Source Files\TyFunctions</Filter>
+    </ClCompile>
     <ClCompile Include="TyPropFunctions.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\TyFunctions</Filter>
+    </ClCompile>
+    <ClCompile Include="TyRandom.cpp">
+      <Filter>Source Files\TyFunctions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

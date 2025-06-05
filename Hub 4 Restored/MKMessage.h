@@ -1,4 +1,5 @@
 #pragma once
+#include "Rangs.h"
 
 enum MessageID
 {
@@ -58,4 +59,9 @@ enum MessageID
 
 struct MKMessage {
     MessageID MsgID;
+};
+
+struct BoomerangMKMessage : MKMessage {
+    Rangs::Boomerang* HitRang;
+    bool unk;
 };

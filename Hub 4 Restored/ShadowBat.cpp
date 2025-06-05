@@ -49,3 +49,9 @@ void ShadowBat::InitFunctions()
 {
 	HookFunction();
 }
+
+void ShadowBatProp::Damage()
+{
+	//Damages shadow
+	StateManager.NextState = ShadowBat::Fall;
+}
