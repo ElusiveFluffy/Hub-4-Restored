@@ -79,6 +79,7 @@ Boomerangs RangInfoCycleBackward() {
 // the other args afterwards are on the stack
 Boomerangs __fastcall CurrentRangChanged(void* boomerangManager, void* edx, Boomerangs newRang) {
 	Smashrock::UpdateSmashrockValidRang(newRang);
+	Smasharang::SetSpyEggAutoTargetRang(newRang);
 	return Original_SetCurrentRang(boomerangManager, newRang);
 }
 
