@@ -90,7 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;LEVELSELECTEDITOR_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -99,7 +99,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ModuleDefinitionFile>Source.def</ModuleDefinitionFile>
-      <AdditionalDependencies>C:\Users\Kana\source\repos\Hub 4 Restored\Debug\TygerMemory.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)Debug\TygerMemory.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(OutDir)$(ProjectName).dll" "D:\SteamLibrary\steamapps\common\TY the Tasmanian Tiger\Debug Plugins\$(ProjectName).dll"</Command>
@@ -113,7 +113,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;LEVELSELECTEDITOR_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -124,6 +124,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ModuleDefinitionFile>Source.def</ModuleDefinitionFile>
+      <AdditionalDependencies>$(SolutionDir)Debug\TygerMemory.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(OutDir)$(ProjectName).dll" "D:\SteamLibrary\steamapps\common\TY the Tasmanian Tiger\Plugins\$(ProjectName).dll"</Command>
@@ -171,6 +172,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CustomTyDev.h" />
+    <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="EnemyObject.h" />
     <ClInclude Include="EventMessage.h" />
     <ClInclude Include="FireParticle.h" />
@@ -216,10 +218,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CustomTyDev.cpp" />
+    <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="FireParticle.cpp" />
     <ClCompile Include="Fireworks.cpp" />
     <ClCompile Include="Flamerang.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="glad.c" />
     <ClCompile Include="Hub4SFX.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="NumUtil.cpp" />

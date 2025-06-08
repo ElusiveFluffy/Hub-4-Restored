@@ -5,6 +5,7 @@
 #include "TyPropFunctions.h"
 #include "FireParticle.h"
 #include "TyRandom.h"
+#include "DebugDraw.h"
 
 ModuleInfo<FireworksMKProp> FireworksModule{};
 
@@ -65,6 +66,7 @@ void FireworksMKProp::Draw()
 	if (State == FireworksCrateState::Hidden)
 		return;
 	StaticProp::Draw();
+	DebugDraw::DrawDebugBox3D(pModel->GetBoundingVolume(-1), pModel->pMatrices);
 }
 
 void FireworksMKProp::Burn()
