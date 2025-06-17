@@ -199,6 +199,7 @@
     <ClInclude Include="PathManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PluginCore.h" />
+    <ClInclude Include="ShatterStruct.h" />
     <ClInclude Include="TightStructPacker.h" />
     <ClInclude Include="TyPropFunctions.h" />
     <ClInclude Include="Rangs.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="Levels.cpp" />
     <ClCompile Include="LevelSelect.cpp" />
     <ClCompile Include="Options.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -239,6 +241,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PluginCore.cpp" />
+    <ClCompile Include="ShatterStruct.cpp" />
     <ClCompile Include="TyPropFunctions.cpp" />
     <ClCompile Include="Rangs.cpp" />
     <ClCompile Include="SaveFile.cpp" />

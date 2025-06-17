@@ -94,4 +94,7 @@ struct ParticleSystem
     float Age;
     ParticleSystem* pNext;
     int UniqueID;
+
+    void Destroy();
+    void Destroy(float deathTimer);
 };

@@ -155,5 +155,6 @@ struct ShadowBatProp : EnemyObject
     Material* ShadowCameoMat;
 
     void Damage();
+    static ShadowBatProp* GetShadowBat();
 };
 TIGHT_PACK_END

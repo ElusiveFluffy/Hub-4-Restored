@@ -7,9 +7,12 @@
 #include "TyRandom.h"
 #include "DebugDraw.h"
 
-ModuleInfo<FireworksMKProp> FireworksModule{};
+//TygerMemory
+#include "sound.h"
 
-void Fireworks::InitGameObject(KromeIni* globalModel)
+ModuleInfo<FireworksCrate> FireworksModule{};
+
+void FireworksProp::InitGameObject(KromeIni* globalModel)
 {
 	FireworksDesc.Init(&FireworksModule, "Prop_0225_Fireworks", "Fireworks", 0x41, 1);
 	FireworksDesc.Load(globalModel);
@@ -17,59 +20,133 @@ void Fireworks::InitGameObject(KromeIni* globalModel)
 	SetPreviousGameObject(GameObj::PreviousGameObj, &FireworksDesc);
 }
 
-void FireworksMKProp::Message(MKMessage* pMsg)
+void FireworksCrate::Init(GameObjDesc* pDesc)
 {
-	if (pMsg->MsgID == MSG_BoomerangMsg && ((BoomerangMKMessage*)pMsg)->HitRang->RangIndex == Rangs::Flamerang) {
-		ShadowBatProp* shadowProp = *(ShadowBatProp**)(Core::moduleBase + 0x25da18);
-		if (shadowProp->StateManager.CurrentState != ShadowBat::Fall)
-		{
-			shadowProp->Damage();
-		}
+	StaticProp::Init(pDesc);
+	FireworksShatter = Shatter_Add(pModel, 0.349999994f, 0.449999988f, 120);
+	FireworksShatter->OnFire = true;
+}
+
+void FireworksCrate::Deinit()
+{
+	if (FireParticleSys)
+	{
+		FireParticleSys->Destroy();
+		FireParticleSys = nullptr;
+	}
+	if (FireGlowParticleSys)
+	{
+		FireGlowParticleSys->Destroy();
+		FireGlowParticleSys = nullptr;
+	}
+	StaticProp::Deinit();
+}
+
+void FireworksCrate::Message(MKMessage* pMsg)
+{
+	if (pMsg->MsgID == MSG_BoomerangMsg && State != FireworksCrateState::Burning && ((BoomerangMKMessage*)pMsg)->HitRang->RangIndex == Rangs::Flamerang) {
+		ShadowBatProp* shadowProp = ShadowBatProp::GetShadowBat();
 		State = FireworksCrateState::Burning;
 
 		if (!FireParticleSys) {
 			BoundingVolume* volume = pModel->GetBoundingVolume(-1);
-			FireParticle::Particle_Fire_Init(&FireParticleSys, &pModel->Matrices.Position, volume, 3.0f, true);
+			FireParticle::Particle_Fire_Init(&FireParticleSys, &pModel->Matrices[0].Position, volume, 3.0f, true);
 		}
 
 		if (!FireGlowParticleSys) {
 			BoundingVolume* volume = pModel->GetBoundingVolume(-1);
-			FireParticle::Particle_Fire_Init(&FireGlowParticleSys, &pModel->Matrices.Position, volume, 3.0f, false);
+			FireParticle::Particle_Fire_Init(&FireGlowParticleSys, &pModel->Matrices[0].Position, volume, 3.0f, false);
 		}
+
+		Sound::PlayTySoundByIndex(GlobalSound::FireworksIgnite, &pModel->Matrices[0].Position, 0);
+		Sound::PlayTySoundByIndex(GlobalSound::FireworksLaunch, &pModel->Matrices[0].Position, 0);
 	}
 	GameObject::Message(pMsg);
 }
 
-void FireworksMKProp::Update()
+void FireworksCrate::Update()
 {
-	if (Rangs::IsCurrentRang(Rangs::Flamerang))
-		TyPropFunctions::AutoTargetSet(2, &pModel->Matrices.Position, nullptr, &pModel->Matrices.Position, pModel);
+	switch (State) {
+	case FireworksCrateState::Visible:
+	{
+		if (Rangs::IsCurrentRang(Rangs::Flamerang))
+			TyPropFunctions::AutoTargetSet(2, &pModel->Matrices[0].Position, nullptr, &pModel->Matrices[0].Position, pModel);
+		break;
+	}
+	case FireworksCrateState::Burning:
+	{
+		Burn();
+		Vector4f modelPos = pModel->Matrices[0].Position;
 
-	if (State == FireworksCrateState::Burning) {
-		Vector4f modelPos = pModel->Matrices.Position;
-		Vector4f spawnPos{};
-		spawnPos.x = (TyRandom::RandomFR(0.0f, 70.0f) - 35.0f + modelPos.x);
-		spawnPos.y = (TyRandom::RandomFR(0.0f, 65.0f) + modelPos.y);
-		spawnPos.z = (TyRandom::RandomFR(0.0f, 70.0f) - 35.0f + modelPos.z);
-		spawnPos.w = modelPos.w;
-		FireParticle::Particle_Fire_Create(&FireParticleSys, &spawnPos, 2.0f, true);
+		if (!Firework.Exploded)
+		{
+			for (FireworksParams& fireworkParam : Firework.Params)
+			{
+				int rocketMatrixIndex = pModel->GetSubObjectMatrixIndex(pModel->GetSubobjectIndex(fireworkParam.SubObjectName.c_str()));
+				Vector4f dir = fireworkParam.NormalizedLaunchDir * FireworksProp::FireworksDesc.LaunchSpeed;
+				pModel->Matrices[rocketMatrixIndex].Position = pModel->Matrices[rocketMatrixIndex].Position + dir;
+			}
+			if (Firework.LaunchTime >= FireworksProp::FireworksDesc.LaunchDuration) {
+				Firework.Exploded = true;
+				ShadowBatProp* shadowProp = ShadowBatProp::GetShadowBat();
+				if (shadowProp->StateManager.CurrentState != ShadowBat::Fall)
+					shadowProp->Damage();
 
-		spawnPos.x = (TyRandom::RandomFR(0.0f, 70.0f) - 35.0f + modelPos.x);
-		spawnPos.y = (TyRandom::RandomFR(0.0f, 65.0f) + modelPos.y);
-		spawnPos.z = (TyRandom::RandomFR(0.0f, 70.0f) - 35.0f + modelPos.z);
-		FireParticle::Particle_Fire_Create(&FireGlowParticleSys, &spawnPos, 3.0f, false);
+				for (FireworksParams& fireworkParam : Firework.Params)
+					pModel->EnableSubObject(pModel->GetSubobjectIndex(fireworkParam.SubObjectName.c_str()), false);
+
+				Sound::PlayTySoundByIndex(GlobalSound::FireworksDetonate, &modelPos);
+			}
+		}
+		else if (Firework.LaunchTime >= FireworksProp::FireworksDesc.LaunchDuration + FireworksProp::FireworksDesc.ShatterAdditionalDelay) {
+			if (FireParticleSys)
+			{
+				FireParticleSys->Destroy(1.0f);
+				FireParticleSys = nullptr;
+			}
+			if (FireGlowParticleSys)
+			{
+				FireGlowParticleSys->Destroy(1.0f);
+				FireGlowParticleSys = nullptr;
+			}
+
+			collisionInfo.Enabled = false;
+			// The shatter struct has its own draw function to draw the shattering
+			State = FireworksCrateState::Hidden;
+
+			FireworksShatter->Explode((Vector4f*)(Core::moduleBase + 0x1fb2a0), 0.0599999987f, 3.0f);
+
+			// Need to set them to false again as the shatter explode function sets them all to true
+			for (FireworksParams& fireworkParam : Firework.Params)
+				pModel->EnableSubObject(pModel->GetSubobjectIndex(fireworkParam.SubObjectName.c_str()), false);
+			Sound::PlayTySoundByIndex(GlobalSound::FireworksCrateExplodes, &modelPos);
+		}
+		Firework.LaunchTime += 1;
+
+		break;
+	}
 	}
 }
 
-void FireworksMKProp::Draw()
+void FireworksCrate::Draw()
 {
 	if (State == FireworksCrateState::Hidden)
 		return;
 	StaticProp::Draw();
-	DebugDraw::DrawDebugBox3D(pModel->GetBoundingVolume(-1), pModel->pMatrices);
 }
 
-void FireworksMKProp::Burn()
+void FireworksCrate::Burn()
 {
+	Vector4f modelPos = pModel->Matrices[0].Position;
+	Vector4f spawnPos{};
+	spawnPos.x = (TyRandom::RandomFR(0.0f, 70.0f) - 35.0f + modelPos.x);
+	spawnPos.y = (TyRandom::RandomFR(0.0f, 65.0f) + modelPos.y);
+	spawnPos.z = (TyRandom::RandomFR(0.0f, 70.0f) - 35.0f + modelPos.z);
+	spawnPos.w = modelPos.w;
+	FireParticle::Particle_Fire_Create(&FireParticleSys, &spawnPos, 2.0f, true);
 
+	spawnPos.x = (TyRandom::RandomFR(0.0f, 70.0f) - 35.0f + modelPos.x);
+	spawnPos.y = (TyRandom::RandomFR(0.0f, 65.0f) + modelPos.y);
+	spawnPos.z = (TyRandom::RandomFR(0.0f, 70.0f) - 35.0f + modelPos.z);
+	FireParticle::Particle_Fire_Create(&FireGlowParticleSys, &spawnPos, 3.0f, false);
 }

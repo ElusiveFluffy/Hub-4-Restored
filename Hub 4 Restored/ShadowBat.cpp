@@ -55,3 +55,8 @@ void ShadowBatProp::Damage()
 	//Damages shadow
 	StateManager.NextState = ShadowBat::Fall;
 }
+
+ShadowBatProp* ShadowBatProp::GetShadowBat()
+{
+	return *(ShadowBatProp**)(Core::moduleBase + 0x25da18);
+}
