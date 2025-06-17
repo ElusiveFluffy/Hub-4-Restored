@@ -15,7 +15,7 @@ using namespace Smashrock;
 //Index 2: Smash rock
 Rangs::Boomerangs* RCBlockageValidRangs = nullptr;
 
-typedef UINT* (__fastcall* PlayShatterableSound_t)(MKProp* prop);
+typedef UINT* (__fastcall* PlayShatterableSound_t)(GameObject* prop);
 PlayShatterableSound_t Original_PlayShatterableSound;
 
 //To make the smashrock work with both the smasharang and kaboomerang
@@ -25,7 +25,7 @@ void Smashrock::UpdateSmashrockValidRang(Rangs::Boomerangs newRang)
 		RCBlockageValidRangs[2] = newRang;
 }
 
-UINT* __fastcall PlayShatterableSound(MKProp* prop) {
+UINT* __fastcall PlayShatterableSound(GameObject* prop) {
 	if (!prop->pDescriptor)
 		return Original_PlayShatterableSound(prop);
 

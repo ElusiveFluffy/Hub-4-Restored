@@ -43,6 +43,17 @@ struct MKProp
     MKProp* pNextUpdated;
     //Seems to be unused most of the time
     MKProp* pNextOfThisType;
+
+    virtual bool LoadLine(KromeIniLine* pLine) {
+        return false;
+    }
+    virtual void LoadDone() {}
+    virtual void Reset() {}
+    virtual void Update() {}
+    virtual void Draw() {}
+    virtual void Message(MKMessage* pMsg) {}
+    virtual void Init(GameObjDesc* pDesc) {}
+    virtual void Deinit() {}
 };
 
 struct GameObject;
