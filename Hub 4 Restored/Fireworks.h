@@ -14,19 +14,21 @@ enum class FireworksCrateState {
 struct FireworksParams {
 	const std::string SubObjectName;
 	const Vector4f NormalizedLaunchDir;
-	Vector4f VelocityDir;
+	
+	float SinXOffset = 0.0f;
+	float SinZOffset = 0.0f;
 };
 
 struct Fireworks {
 	int LaunchTime = 0;
 	bool Exploded = false;
 	FireworksParams Params[6] = {
-		{ "F_Rocket", { -0.283869f, 0.948733f, -0.139013f, 1.0f }, {}},
-		{ "F_Rocket01", { 0.317213f, 0.938379f, -0.137185f, 1.0f }, {}},
-		{ "F_Rocket02", { 0.228182f, 0.802585f, 0.551172f, 1.0f }, {}},
-		{ "F_Rocket03", { -0.403097f, 0.802581f, 0.439746f, 1.0f }, {}},
-		{ "F_Rocket04", { -0.138725f, 0.904581f, -0.403098f, 1.0f }, {}},
-		{ "F_Rocket05", { 0.255547f, 0.929066f, -0.267454f, 1.0f }, {}}
+		{ "F_Rocket", { -0.283869f, 0.948733f, -0.139013f, 1.0f } },
+		{ "F_Rocket01", { 0.317213f, 0.938379f, -0.137185f, 1.0f } },
+		{ "F_Rocket02", { 0.228182f, 0.802585f, 0.551172f, 1.0f } },
+		{ "F_Rocket03", { -0.403097f, 0.802581f, 0.439746f, 1.0f } },
+		{ "F_Rocket04", { -0.138725f, 0.904581f, -0.403098f, 1.0f } },
+		{ "F_Rocket05", { 0.255547f, 0.929066f, -0.267454f, 1.0f } }
 	};
 };
 
@@ -41,14 +43,13 @@ struct FireworksCrate : StaticProp {
 	ParticleSystem* FireParticleSys = nullptr;
 	ParticleSystem* FireGlowParticleSys = nullptr;
 	ShatterStruct* FireworksShatter = nullptr;
-	BoundingVolume OriginalVolumeSize{};
 	Fireworks Firework{};
 
 	void Burn();
 };
 
 struct FireworksCrateDesc : StaticPropDesc {
-	float LaunchSpeed = 10.0f;
+	float LaunchSpeed = 14.0f;
 	// Ty runs at a fixed update rate of 60 ticks a second
 	int LaunchDuration = 60;
 	// LaunchDuration + this

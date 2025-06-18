@@ -25,6 +25,13 @@ void FireworksCrate::Init(GameObjDesc* pDesc)
 	StaticProp::Init(pDesc);
 	FireworksShatter = Shatter_Add(pModel, 0.349999994f, 0.449999988f, 120);
 	FireworksShatter->OnFire = true;
+
+	float PI = 3.141592653589;
+	for (FireworksParams& fireworkParam : Firework.Params)
+	{
+		fireworkParam.SinXOffset = TyRandom::RandomFR(0.0f, 2.0f * PI);
+		fireworkParam.SinZOffset = TyRandom::RandomFR(0.0f, 2.0f * PI);
+	}
 }
 
 void FireworksCrate::Deinit()
@@ -70,21 +77,44 @@ void FireworksCrate::Update()
 	case FireworksCrateState::Visible:
 	{
 		if (Rangs::IsCurrentRang(Rangs::Flamerang))
-			TyPropFunctions::AutoTargetSet(2, &pModel->Matrices[0].Position, nullptr, &pModel->Matrices[0].Position, pModel);
+		{
+			Vector4f targetPos = pModel->Matrices[0].Position;
+			// Roughly the center, otherwise it'll hit the ground sometimes when trying to target it
+			targetPos.y += 35.0f;
+			TyPropFunctions::AutoTargetSet(2, &targetPos, nullptr, &targetPos, pModel);
+		}
 		break;
 	}
 	case FireworksCrateState::Burning:
 	{
 		Burn();
-		Vector4f modelPos = pModel->Matrices[0].Position;
 
 		if (!Firework.Exploded)
 		{
+			float timeElapsed = Firework.LaunchTime / 60.0f;
+			float weaveStrength = 0.4f;
+			float weaveFrequency = 7.0f;
+
 			for (FireworksParams& fireworkParam : Firework.Params)
 			{
+				Vector4f up = fireworkParam.NormalizedLaunchDir;
+
+				// Local axes
+				Vector4f tempForward = { 0.0f, 1.0f, 0.0f, 1.0f };
+				Vector4f right = Vector4f::Normalize(Vector4f::Cross(tempForward, up));
+				Vector4f forward = Vector4f::Normalize(Vector4f::Cross(up, right));
+
+				// Offset in local right/forward directions using sine waves
+				float offsetX = sinf(timeElapsed * weaveFrequency + fireworkParam.SinXOffset) * weaveStrength;
+				float offsetZ = sinf(timeElapsed * weaveFrequency * 0.8f + fireworkParam.SinZOffset) * weaveStrength;
+
+				Vector4f deviation = right * offsetX + forward * offsetZ;
+				Vector4f weavingDir = Vector4f::Normalize(up + deviation);
+
+				Vector4f velocity = weavingDir * FireworksProp::FireworksDesc.LaunchSpeed;
+
 				int rocketMatrixIndex = pModel->GetSubObjectMatrixIndex(pModel->GetSubobjectIndex(fireworkParam.SubObjectName.c_str()));
-				Vector4f dir = fireworkParam.NormalizedLaunchDir * FireworksProp::FireworksDesc.LaunchSpeed;
-				pModel->Matrices[rocketMatrixIndex].Position = pModel->Matrices[rocketMatrixIndex].Position + dir;
+				pModel->Matrices[rocketMatrixIndex].Position = pModel->Matrices[rocketMatrixIndex].Position + velocity;
 			}
 			if (Firework.LaunchTime >= FireworksProp::FireworksDesc.LaunchDuration) {
 				Firework.Exploded = true;
@@ -95,6 +125,7 @@ void FireworksCrate::Update()
 				for (FireworksParams& fireworkParam : Firework.Params)
 					pModel->EnableSubObject(pModel->GetSubobjectIndex(fireworkParam.SubObjectName.c_str()), false);
 
+				Vector4f modelPos = pModel->Matrices[0].Position;
 				Sound::PlayTySoundByIndex(GlobalSound::FireworksDetonate, &modelPos);
 			}
 		}
@@ -111,7 +142,7 @@ void FireworksCrate::Update()
 			}
 
 			collisionInfo.Enabled = false;
-			// The shatter struct has its own draw function to draw the shattering
+			// The shatter manager has its own draw function to draw the shattering
 			State = FireworksCrateState::Hidden;
 
 			FireworksShatter->Explode((Vector4f*)(Core::moduleBase + 0x1fb2a0), 0.0599999987f, 3.0f);
@@ -119,6 +150,8 @@ void FireworksCrate::Update()
 			// Need to set them to false again as the shatter explode function sets them all to true
 			for (FireworksParams& fireworkParam : Firework.Params)
 				pModel->EnableSubObject(pModel->GetSubobjectIndex(fireworkParam.SubObjectName.c_str()), false);
+
+			Vector4f modelPos = pModel->Matrices[0].Position;
 			Sound::PlayTySoundByIndex(GlobalSound::FireworksCrateExplodes, &modelPos);
 		}
 		Firework.LaunchTime += 1;
