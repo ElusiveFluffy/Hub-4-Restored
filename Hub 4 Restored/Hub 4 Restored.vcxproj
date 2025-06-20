@@ -182,7 +182,9 @@
     <ClInclude Include="Hub4SFX.h" />
     <ClInclude Include="Include\ini.h" />
     <ClInclude Include="KromeIni.h" />
+    <ClInclude Include="MainRenderer.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="MKMemory.h" />
     <ClInclude Include="MKMessage.h" />
     <ClInclude Include="Model.h" />
@@ -226,6 +228,8 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Hub4SFX.cpp" />
+    <ClCompile Include="MainRenderer.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="NumUtil.cpp" />
     <ClCompile Include="Collectables.cpp" />

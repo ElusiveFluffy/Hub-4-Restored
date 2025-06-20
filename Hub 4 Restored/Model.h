@@ -70,7 +70,13 @@ struct Model
     ModelTemplate* pTemplate;
     Animation* pAnimation;
     Matrix* pMatrices; // Points to the matrices array in this struct
-    char _c[0x28];
+    char _c[4];
+    char _10[4];
+    char _14[0x10];
+    BYTE* subobjectData;
+    int RenderType;
+    char _2c[4];
+    char _30[4];
     RGBA Colour;
     Matrix Matrices[1]; // Model has at least 1 matrix in it, more are allocated
 
@@ -78,4 +84,9 @@ struct Model
     int GetSubobjectIndex(const char* subObjectName);
     int GetSubObjectMatrixIndex(int subObjectIndex);
     void EnableSubObject(int subObjectIndex, bool newState);
+    // Can set anm name to nullptr if it has no anm file
+    static Model* Create(const char* mdlName, const char* anmName);
+    void Destroy();
+    void Draw();
+    static void Draw_AddPostDrawModel(Model* pModel, float distSquared, int flags);
 };

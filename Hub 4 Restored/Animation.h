@@ -1,13 +1,9 @@
 #pragma once
+#include "Matrix.h"
 
 //TygerMemory
 #include "vector4f.h"
 
-struct Matrix
-{
-    float Data[0x3][0x4];
-    Vector4f Position;
-};
 struct AnimationTemplate
 {
     char Name[0x20];

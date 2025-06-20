@@ -12,6 +12,7 @@
 #include "Hub4SFX.h"
 #include "Options.h"
 #include "MKMemory.h"
+#include "MainRenderer.h"
 
 #include "MinHook.h"
 
@@ -50,6 +51,8 @@ bool PluginCore::Setup()
 
     Collectables::Setup();
     Levels::HookFunctions();
+    if (!MainRenderer::HookFunctions())
+        return false;
 
     CustomTyDev::OverrideTyDev();
 
