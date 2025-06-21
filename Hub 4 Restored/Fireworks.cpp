@@ -205,7 +205,7 @@ void FireworkBurst::Init()
 {
 	int colourCount = FireworksProp::FireworksDesc.BurstColours.size();
 	for (int i = 0; i < 6; i++) {
-		Models[i] = Model::Create("FireworkBurst", nullptr);
+		Models[i] = Model::Create("FX07_FireworkBurst", nullptr);
 		Models[i]->RenderType = 3;
 		Models[i]->Colour = FireworksProp::FireworksDesc.BurstColours[TyRandom::RandomIR(0, colourCount)];
 	}
@@ -234,14 +234,13 @@ void FireworkBurst::ExplodeUpdate()
 
 	ExplosionTime++;
 	float ScaleRate = 0.2f / (ExplosionTime / 5.0f);
-	Vector4f newScale = { 0.0f, 0.0f, 0.0f, 1.0f };
 	Scale += ScaleRate;
-	newScale = newScale + Scale;
+
 	for (int i = 0; i < 6; i++) {
 		Vector4f pos = Models[i]->pMatrices->Position;
 		// Set Identity so it doesn't add to the existing scale
 		Models[i]->pMatrices->SetIdentity();
-		Models[i]->pMatrices->Scale(Models[i]->pMatrices, &newScale);
+		Models[i]->pMatrices->Scale(Models[i]->pMatrices, Scale);
 		Models[i]->pMatrices->Position = pos;
 	}
 }
@@ -249,11 +248,12 @@ void FireworkBurst::ExplodeUpdate()
 void FireworkBurst::Explode(Model* pCrateModel, FireworksParams* params)
 {
 	Exploding = true;
-	Vector4f cratePos = pCrateModel->pMatrices->Position;
 	for (int i = 0; i < 6; i++) {
 		int matrixIndex = pCrateModel->GetSubObjectMatrixIndex(pCrateModel->GetSubobjectIndex(params[i].SubObjectName.c_str()));
 		memcpy(Models[i]->pMatrices, &pCrateModel->Matrices[matrixIndex], sizeof(Matrix));
-		Models[i]->pMatrices->Position = Models[i]->pMatrices->Position + cratePos;
+		// The fireworks position is in local space relative to the crate, 
+		// so it needs to be multiplied to apply the global positioning and rotation of the crate
+		Models[i]->pMatrices->Multiply(Models[i]->pMatrices, pCrateModel->pMatrices);
 		MainRenderer::AddModel(Models[i]);
 	}
 

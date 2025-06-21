@@ -10,4 +10,6 @@ struct Matrix
 
     void SetIdentity();
     void Scale(Matrix* arg2, Vector4f* scale);
+    void Scale(Matrix* pMatrix, float scalar);
+    void Multiply(Matrix* pMatrix1, Matrix* pMatrix2);
 };
