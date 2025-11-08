@@ -37,6 +37,7 @@ struct FireworkBurst {
 };
 
 struct Fireworks {
+	int CurrentRocketParticleIndex = 0;
 	int LaunchTime = 0;
 	bool Exploded = false;
 	Model* pModel = nullptr;

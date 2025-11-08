@@ -3,7 +3,7 @@
 #include "ShadowBat.h"
 #include "Rangs.h"
 #include "TyPropFunctions.h"
-#include "FireParticle.h"
+#include "ParticleFunctions.h"
 #include "TyRandom.h"
 #include "DebugDraw.h"
 #include "MainRenderer.h"
@@ -53,12 +53,12 @@ void FireworksCrate::Message(MKMessage* pMsg)
 
 		if (!FireParticleSys) {
 			BoundingVolume* volume = pModel->GetBoundingVolume(-1);
-			FireParticle::Particle_Fire_Init(&FireParticleSys, &pModel->Matrices[0].Position, volume, 3.0f, true);
+			ParticleFunctions::Particle_Fire_Init(&FireParticleSys, &pModel->Matrices[0].Position, volume, 3.0f, true);
 		}
 
 		if (!FireGlowParticleSys) {
 			BoundingVolume* volume = pModel->GetBoundingVolume(-1);
-			FireParticle::Particle_Fire_Init(&FireGlowParticleSys, &pModel->Matrices[0].Position, volume, 3.0f, false);
+			ParticleFunctions::Particle_Fire_Init(&FireGlowParticleSys, &pModel->Matrices[0].Position, volume, 3.0f, false);
 		}
 
 		Sound::PlayTySoundByIndex(GlobalSound::FireworksIgnite, &pModel->Matrices[0].Position, 0);
@@ -138,12 +138,12 @@ void FireworksCrate::Burn()
 	spawnPos.y = (TyRandom::RandomFR(0.0f, 65.0f) + modelPos.y);
 	spawnPos.z = (TyRandom::RandomFR(0.0f, 70.0f) - 35.0f + modelPos.z);
 	spawnPos.w = modelPos.w;
-	FireParticle::Particle_Fire_Create(&FireParticleSys, &spawnPos, 2.0f, true);
+	ParticleFunctions::Particle_Fire_Create(&FireParticleSys, &spawnPos, 2.0f, true);
 
 	spawnPos.x = (TyRandom::RandomFR(0.0f, 70.0f) - 35.0f + modelPos.x);
 	spawnPos.y = (TyRandom::RandomFR(0.0f, 65.0f) + modelPos.y);
 	spawnPos.z = (TyRandom::RandomFR(0.0f, 70.0f) - 35.0f + modelPos.z);
-	FireParticle::Particle_Fire_Create(&FireGlowParticleSys, &spawnPos, 3.0f, false);
+	ParticleFunctions::Particle_Fire_Create(&FireGlowParticleSys, &spawnPos, 3.0f, false);
 }
 
 void Fireworks::Init(Model* modelPtr)
@@ -186,6 +186,19 @@ void Fireworks::LaunchUpdate()
 
 		int rocketMatrixIndex = pModel->GetSubObjectMatrixIndex(pModel->GetSubobjectIndex(fireworkParam.SubObjectName.c_str()));
 		pModel->Matrices[rocketMatrixIndex].Position = pModel->Matrices[rocketMatrixIndex].Position + velocity;
+	}
+	// The game only has a limited number of steam particles, so need to use them somewhat sparingly
+	if (LaunchTime % 3 == 0) {
+		int rocketMatrixIndex = pModel->GetSubObjectMatrixIndex(pModel->GetSubobjectIndex(Params[CurrentRocketParticleIndex].SubObjectName.c_str()));
+		// Apply the base matrix to have the correct rotation and position
+		Matrix rocketMatrix = pModel->Matrices[rocketMatrixIndex];
+		rocketMatrix.Multiply(&rocketMatrix, pModel->pMatrices);
+		Vector4f particlePos = rocketMatrix.Position;
+
+		float scale = 47.0f;
+		ParticleFunctions::SpawnWaterSteam(&particlePos, scale);
+
+		CurrentRocketParticleIndex = (CurrentRocketParticleIndex + 1) % ARRAYSIZE(Params);
 	}
 	if (LaunchTime >= FireworksProp::FireworksDesc.LaunchDuration) {
 		Exploded = true;

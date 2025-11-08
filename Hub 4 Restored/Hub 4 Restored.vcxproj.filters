@@ -171,7 +171,7 @@
     <ClInclude Include="ParticleSystemManager.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
-    <ClInclude Include="FireParticle.h">
+    <ClInclude Include="ParticleFunctions.h">
       <Filter>Header Files\TyFunctions</Filter>
     </ClInclude>
     <ClInclude Include="TyFunctions.h">
@@ -266,7 +266,7 @@
     <ClCompile Include="Flamerang.cpp">
       <Filter>Source Files\GameObject\Rangs</Filter>
     </ClCompile>
-    <ClCompile Include="FireParticle.cpp">
+    <ClCompile Include="ParticleFunctions.cpp">
       <Filter>Source Files\TyFunctions</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">

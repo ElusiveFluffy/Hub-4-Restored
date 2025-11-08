@@ -175,7 +175,7 @@
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="EnemyObject.h" />
     <ClInclude Include="EventMessage.h" />
-    <ClInclude Include="FireParticle.h" />
+    <ClInclude Include="ParticleFunctions.h" />
     <ClInclude Include="Fireworks.h" />
     <ClInclude Include="Flamerang.h" />
     <ClInclude Include="GameObject.h" />
@@ -222,7 +222,7 @@
   <ItemGroup>
     <ClCompile Include="CustomTyDev.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
-    <ClCompile Include="FireParticle.cpp" />
+    <ClCompile Include="ParticleFunctions.cpp" />
     <ClCompile Include="Fireworks.cpp" />
     <ClCompile Include="Flamerang.cpp" />
     <ClCompile Include="GameObject.cpp" />

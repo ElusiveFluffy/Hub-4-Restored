@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TyFunctions.h"
 #include "TyPropFunctions.h"
-#include "FireParticle.h"
+#include "ParticleFunctions.h"
 #include "TyRandom.h"
 #include "core.h"
 
@@ -19,7 +19,7 @@ void TyFunctions::SetFuntions()
 	//Props
 	TyPropFunctions::TyAutoTargetSet = (TyPropFunctions::TyAutoTargetSet_t)(Core::moduleBase + 0x169470);
 
-	FireParticle::InitFunctions();
+	ParticleFunctions::InitFunctions();
 
 	TyRandom::InitRandNumFunctions();
 }
