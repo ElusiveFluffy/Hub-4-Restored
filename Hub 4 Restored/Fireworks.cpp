@@ -168,6 +168,8 @@ void Fireworks::LaunchUpdate()
 
 	for (FireworksParams& fireworkParam : Params)
 	{
+		if (LaunchTime < fireworkParam.LaunchDelay)
+			continue;
 		Vector4f up = fireworkParam.NormalizedLaunchDir;
 
 		// Local axes

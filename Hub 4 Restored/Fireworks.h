@@ -15,6 +15,7 @@ enum class FireworksCrateState {
 struct FireworksParams {
 	const std::string SubObjectName;
 	const Vector4f NormalizedLaunchDir;
+	const int LaunchDelay = 0;
 	
 	float SinXOffset = 0.0f;
 	float SinZOffset = 0.0f;
@@ -42,12 +43,12 @@ struct Fireworks {
 	bool Exploded = false;
 	Model* pModel = nullptr;
 	FireworksParams Params[6] = {
-		{ "F_Rocket", { -0.283869f, 0.948733f, -0.139013f, 1.0f } },
-		{ "F_Rocket01", { 0.317213f, 0.938379f, -0.137185f, 1.0f } },
-		{ "F_Rocket02", { 0.228182f, 0.802585f, 0.551172f, 1.0f } },
-		{ "F_Rocket03", { -0.403097f, 0.802581f, 0.439746f, 1.0f } },
-		{ "F_Rocket04", { -0.138725f, 0.904581f, -0.403098f, 1.0f } },
-		{ "F_Rocket05", { 0.255547f, 0.929066f, -0.267454f, 1.0f } }
+		{ "F_Rocket", { -0.283869f, 0.948733f, -0.139013f, 1.0f }, 0 },
+		{ "F_Rocket01", { 0.317213f, 0.938379f, -0.137185f, 1.0f }, 15 },
+		{ "F_Rocket02", { 0.228182f, 0.802585f, 0.551172f, 1.0f }, 5 },
+		{ "F_Rocket03", { -0.403097f, 0.802581f, 0.439746f, 1.0f }, 0 },
+		{ "F_Rocket04", { -0.138725f, 0.904581f, -0.403098f, 1.0f }, 10 },
+		{ "F_Rocket05", { 0.255547f, 0.929066f, -0.267454f, 1.0f }, 20 }
 	};
 	FireworkBurst Burst{};
 
