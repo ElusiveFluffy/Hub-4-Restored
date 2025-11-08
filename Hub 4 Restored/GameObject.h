@@ -120,7 +120,6 @@ struct ModuleInfoBaseObject
     int entityCount;
     int InstanceSize;
     bool Update;
-    char _21[3];
     ModuleOverrideFuncFlags Flags;
     ModuleInfoBase* pNext;
 };
@@ -181,7 +180,7 @@ typedef void(__thiscall* GameObjDescInit_t)(GameObjDesc* gameObjDesc, ModuleInfo
 typedef void(__thiscall* GameObjDescLoad_t)(GameObjDesc* gameObjDesc, KromeIni* pIni);
 inline GameObjDescInit_t DefaultGameObjDescInit;
 inline GameObjDescLoad_t DefaultGameObjDescLoad;
-struct GameObjDesc
+struct GameObjDesc : MKPropDescriptor
 {
     virtual void Init(ModuleInfoBase* moduleInfo, const char* mdlName, const char* aliasName, int searchMask, int flags) {
         DefaultGameObjDescInit(this, moduleInfo, mdlName, aliasName, searchMask, flags);
@@ -192,7 +191,6 @@ struct GameObjDesc
     virtual void* ConstructObject(void* mem) {
         return pModule->ConstructObject(mem);
     }
-    MKPropDescriptor MkPropDesc;
     char AliasName[0x20];
     char ModelName[0x20];
     ModuleInfoBase* pModule;
