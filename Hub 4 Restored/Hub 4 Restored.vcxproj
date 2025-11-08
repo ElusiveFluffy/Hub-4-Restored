@@ -229,6 +229,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="Hub4SFX.cpp" />
     <ClCompile Include="MainRenderer.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="NumUtil.cpp" />

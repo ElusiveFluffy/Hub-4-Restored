@@ -25,6 +25,10 @@ struct FireworkBurst {
 	float Scale = 0.0f;
 	bool Exploding = false;
 	int ExplosionTime = 0;
+	int Phase = 0;
+	Material* ExplodeFX = nullptr;
+	Material* ExplodeEndFX = nullptr;
+	Material* FallFX = nullptr;
 
 	void Init();
 	void Deinit();
@@ -72,7 +76,7 @@ struct FireworksCrateDesc : StaticPropDesc {
 	int LaunchDuration = 60;
 	// LaunchDuration + this
 	int ShatterAdditionalDelay = 30;
-	int BurstExplosionDuration = 75;
+	int BurstExplosionDuration = 90;
 
 	std::array<RGBA, 13> BurstColours = {{
 		// Warm tones

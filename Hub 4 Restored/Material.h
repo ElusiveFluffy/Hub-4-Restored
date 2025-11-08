@@ -2,8 +2,9 @@
 
 //TygerMemory
 #include "colour.h"
+#include "vector4f.h"
 
-//May be wrong for the PC version
+//May be wrong for the PC version (also not the correct size)
 struct Material
 {
     char Name[0x20];
@@ -13,11 +14,13 @@ struct Material
     int BlendMode;
     int Flags;
     int Grass;
-    int Effect;
     RGBA Colour;
-    char _4c[0xc];
-    char _58[4];
-    char _5c[4];
-    char _60[4];
-    char _64[4];
+    Vector4f field_48;
+    int ReferenceCount;
+    Material* pOverlayMat;
+    void* Texture1;
+    void* Texture2;
+
+    static Material* Create(const char* textureName);
+    void Destroy();
 };

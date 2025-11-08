@@ -49,7 +49,6 @@ void FireworksCrate::Deinit()
 void FireworksCrate::Message(MKMessage* pMsg)
 {
 	if (pMsg->MsgID == MSG_BoomerangMsg && State != FireworksCrateState::Burning && ((BoomerangMKMessage*)pMsg)->HitRang->RangIndex == Rangs::Flamerang) {
-		ShadowBatProp* shadowProp = ShadowBatProp::GetShadowBat();
 		State = FireworksCrateState::Burning;
 
 		if (!FireParticleSys) {
@@ -209,14 +208,27 @@ void FireworkBurst::Init()
 		Models[i]->RenderType = 3;
 		Models[i]->Colour = FireworksProp::FireworksDesc.BurstColours[TyRandom::RandomIR(0, colourCount)];
 	}
+	ExplodeEndFX = Material::Create("fx07_tx03");
+	FallFX = Material::Create("fx07_tx04");
 }
 
 void FireworkBurst::Deinit()
 {
+	if (ExplodeFX) {
+		Models[0]->pTemplate->pRenderEntry->pGLModelEntry->pMaterial = ExplodeFX;
+	}
 	for (int i = 0; i < 6; i++) {
 		MainRenderer::RemoveModel(Models[i]);
 		Models[i]->Destroy();
 		Models[i] = nullptr;
+	}
+	if (ExplodeEndFX) {
+		ExplodeEndFX->Destroy();
+		ExplodeEndFX = nullptr;
+	}
+	if (FallFX) {
+		FallFX->Destroy();
+		FallFX = nullptr;
 	}
 }
 
@@ -242,6 +254,46 @@ void FireworkBurst::ExplodeUpdate()
 		Models[i]->pMatrices->SetIdentity();
 		Models[i]->pMatrices->Scale(Models[i]->pMatrices, Scale);
 		Models[i]->pMatrices->Position = pos;
+		
+		if (Phase == 1) {
+			Models[i]->pMatrices->Position.y -= 1.0f;
+		}
+		else if (Phase == 2) {
+			Models[i]->pMatrices->Position.y -= 5.0f;
+		}
+	}
+
+	if (std::fmod((ExplosionTime / (FireworksProp::FireworksDesc.BurstExplosionDuration / 3.0f)), 1.0f) == 0.0f) {
+		Phase++;
+		switch (Phase) {
+		case 1:
+		{
+			// Just need to edit model 0, since they all share model template data
+			if (!ExplodeFX)
+				ExplodeFX = Models[0]->pTemplate->pRenderEntry->pGLModelEntry->pMaterial;
+			Models[0]->pTemplate->pRenderEntry->pGLModelEntry->pMaterial = ExplodeEndFX;
+			break;
+		}
+		case 2:
+		{
+			Models[0]->pTemplate->pRenderEntry->pGLModelEntry->pMaterial = FallFX;
+			Scale = 3.0f;
+			for (int i = 0; i < 6; i++) {
+				Vector4f pos = Models[i]->pMatrices->Position;
+				// Set Identity so it doesn't add to the existing scale
+				Models[i]->pMatrices->SetIdentity();
+				Models[i]->pMatrices->Scale(Models[i]->pMatrices, Scale);
+				Models[i]->pMatrices->Position = pos;
+				Models[i]->pMatrices->Position.y -= 50.0f;
+			}
+			break;
+		}
+		case 3:
+		{
+			// Reset the material
+			Models[0]->pTemplate->pRenderEntry->pGLModelEntry->pMaterial = ExplodeFX;
+		}
+		}
 	}
 }
 

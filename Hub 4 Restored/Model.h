@@ -3,6 +3,7 @@
 // Windows Header Files
 #include <windows.h>
 #include "Animation.h"
+#include "Material.h"
 
 //TygerMemory
 #include "vector4f.h"
@@ -13,6 +14,28 @@ struct BoundingVolume
     Vector4f StartPos;
     Vector4f Length;
 };
+
+#pragma pack(push, 1)
+struct DisplayList {
+    BYTE Primitive;
+    USHORT VertexCount;
+    USHORT VertexIndex;
+    USHORT NormalIndex;
+    USHORT ColourIndex;
+    USHORT UvIndex;
+};
+#pragma pack(pop)
+
+struct SubObjectMaterial {
+    union {
+        char* pMaterialName;
+        Material* pMaterial;
+    };
+    DisplayList* pStripData;
+    USHORT MaxOffset;
+    int StripCount;
+};
+
 struct SubObject
 {
     BoundingVolume Volume;
@@ -23,7 +46,7 @@ struct SubObject
     int Type;
     SHORT MatrixIndex;
     SHORT MaterialCount;
-    void* SubObjectMaterial;
+    SubObjectMaterial* SubObjectMaterial;
     float AlphaLightIntensity;
     char _4c[4];
 };
@@ -55,6 +78,23 @@ struct ModelData
     int field_6c;
 };
 
+// Unsure about the name
+struct OpenGLModelEntry
+{
+    Material* pMaterial;
+    int32_t Texture1Pos; // Unsure
+    int32_t Texture2Pos; // Unsure
+    int32_t DrawVertexCount;
+};
+
+// Unsure about the name
+struct RenderEntry
+{
+    int EntryCount;
+    OpenGLModelEntry* pGLModelEntry;
+    char _8[8];
+};
+
 struct ModelTemplate
 {
     char Name[0x20];
@@ -62,7 +102,8 @@ struct ModelTemplate
     int TemplateDataSize;
     char _28[4];
     ModelData* pModelData;
-    char _30[0x10];
+    RenderEntry* pRenderEntry;
+    char _34[0xc];
 };
 
 struct Model
