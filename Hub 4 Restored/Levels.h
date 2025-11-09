@@ -1,6 +1,10 @@
 #pragma once
-namespace Levels
+class Levels
 {
-	void HookFunctions();
+public:
+	static void Init();
+private:
+	static void HookFunctions();
+	static void EditFMVLevels();
 };
 

@@ -171,6 +171,7 @@
     <ClInclude Include="AnimatingProp.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="ConditionalScript.h" />
     <ClInclude Include="CustomTyDev.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="EnemyObject.h" />

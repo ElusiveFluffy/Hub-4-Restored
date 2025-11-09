@@ -50,7 +50,7 @@ bool PluginCore::Setup()
     TyFunctions::SetFuntions();
 
     Collectables::Setup();
-    Levels::HookFunctions();
+    Levels::Init();
     if (!MainRenderer::HookFunctions())
         return false;
 

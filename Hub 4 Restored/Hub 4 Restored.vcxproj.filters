@@ -198,6 +198,9 @@
     <ClInclude Include="Matrix.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="ConditionalScript.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

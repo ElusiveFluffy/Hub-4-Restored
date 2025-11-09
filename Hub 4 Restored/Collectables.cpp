@@ -37,6 +37,12 @@ void SetLevelInfo() {
 	levelInfo[(int)LevelCode::D3].ShowOpal = true;
 	levelInfo[(int)LevelCode::D3].ShowExtendedTotals = true;
 
+	levelInfo[(int)LevelCode::D4].Zone = Zone::DZone;
+	levelInfo[(int)LevelCode::D4].Talisman = Talisman::Dingo;
+
+	// So the crest shadow fight won't give the tiger talisman (talisman 5), since crest was moved from D2 to E2
+	levelInfo[(int)LevelCode::E2].Talisman = Talisman::Dingo;
+
 	API::LogPluginMessage("Set Level Info Properties");
 }
 

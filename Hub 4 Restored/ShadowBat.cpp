@@ -48,6 +48,10 @@ void HookFunction() {
 void ShadowBat::InitFunctions()
 {
 	HookFunction();
+
+	// Gives the B zone talisman instead of the D zone one (no need to change it based on level, since the D zone talisman would be gotten from crikey now)
+	char newZoneComplete = (char)Zone::BZone;
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xc1083), &newZoneComplete, 1);
 }
 
 void ShadowBatProp::Damage()
