@@ -34,6 +34,11 @@ static bool __fastcall CheckScriptCondition(ConditionalScript* script)
 	case BeenD:
 		conditionFulfilled = saveData->LevelData[(int)LevelCode::D4].TimesEntered != 0;
 		break;
+	// Make it consistent with the other ones, used for the final battle portal, 
+	// usually it only shows if you've entered the level atleast once, but haven't beat the boss
+	case BeenE:
+		conditionFulfilled = saveData->LevelData[(int)LevelCode::E4].TimesEntered != 0;
+		break;
 	// Every other condition just go through the original function
 	default:
 		return Original_CheckScriptCondition(script);
