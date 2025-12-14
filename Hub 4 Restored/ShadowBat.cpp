@@ -1,4 +1,6 @@
 #include "pch.h"
+#include "GameObject.h"
+#include "Fireworks.h"
 #include "ShadowBat.h"
 #include "MinHook.h"
 #include "TygerFrameworkAPI.hpp"
@@ -7,8 +9,27 @@
 #include "core.h"
 #include "level.h"
 
+typedef Vector4f* (__thiscall* PipeGetFallingPos_t)(void* pPipe, Vector4f* fallPos);
+typedef void(__fastcall* ShadowFastcall_t)(ShadowBatProp* shadow);
+
 PipeGetFallingPos_t Original_PipeGetFallingPos;
-ShadowReset_t Original_Reset;
+ShadowFastcall_t Original_FlyToNextPipeInit;
+ShadowFastcall_t Original_Reset;
+
+void __fastcall FlyToNextPipeInit(ShadowBatProp* shadowBat) {
+	if (shadowBat->Health <= 0)
+		return;
+	if (FireworksProp::FireworksDesc.InstanceCount < shadowBat->Health)
+	{
+		API::LogPluginMessage("Not enough fireworks crates in the level!", Error);
+	}
+	else
+	{
+		FireworksCrate* crateProps = (FireworksCrate*)FireworksProp::FireworksDesc.pInstances;
+		crateProps[shadowBat->Health - 1].DropCrate();
+	}
+	Original_FlyToNextPipeInit(shadowBat);
+}
 
 Vector4f* __fastcall PipeGetFallingPos(void* pPipe, void* edx, Vector4f* fallPos) {
 	if (Level::getCurrentLevel() == LevelCode::B4)
@@ -29,6 +50,15 @@ void __fastcall Reset(ShadowBatProp* shadowBat) {
 		hp = 4;
 		fallDeathTimePtr = &ShadowBat::FallDeathExitSeconds;
 
+		if (FireworksProp::FireworksDesc.InstanceCount < hp)
+		{
+			API::LogPluginMessage("Not enough fireworks crates in the level!", Error);
+		}
+		else
+		{
+			FireworksCrate* crateProps = (FireworksCrate*)FireworksProp::FireworksDesc.pInstances;
+			crateProps[hp - 1].State = FireworksCrateState::Visible;
+		}
 	}
 
 	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xbf5a8), &hp, 4);
@@ -42,6 +72,12 @@ void HookFunction() {
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
 		API::LogPluginMessage("Failed to Create the Pipe Get Falling Pos Function Hook, With the Error: " + error, Error);
+		return;
+	}
+	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0xc1140), &FlyToNextPipeInit, reinterpret_cast<LPVOID*>(&Original_FlyToNextPipeInit));
+	if (minHookStatus != MH_OK) {
+		std::string error = MH_StatusToString(minHookStatus);
+		API::LogPluginMessage("Failed to Create Shadow's fly to next pipe init Function Hook, With the Error: " + error, Error);
 		return;
 	}
 	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0xbf500), &Reset, reinterpret_cast<LPVOID*>(&Original_Reset));

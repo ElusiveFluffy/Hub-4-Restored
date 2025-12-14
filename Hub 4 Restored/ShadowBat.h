@@ -8,9 +8,6 @@
 //TygerMemory
 #include "vector4f.h"
 
-typedef Vector4f* (__thiscall* PipeGetFallingPos_t)(void* pPipe, Vector4f* fallPos);
-typedef void(__fastcall* ShadowReset_t)(void* shadow);
-
 namespace ShadowBat
 {
     void InitFunctions();

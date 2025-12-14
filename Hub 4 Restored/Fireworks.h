@@ -63,7 +63,13 @@ struct FireworksCrate : StaticProp {
 	void Update() override;
 	void Draw() override;
 
-	FireworksCrateState State = FireworksCrateState::Visible;
+	void UpdateFallVelocity();
+	void DropCrate();
+
+	FireworksCrateState State = FireworksCrateState::Hidden;
+	int BouncesRemaining = 2;
+	float VerticalVelocity = -400.0f;
+	float OriginalYHeight = 0.0f;
 	ParticleSystem* FireParticleSys = nullptr;
 	ParticleSystem* FireGlowParticleSys = nullptr;
 	ShatterStruct* FireworksShatter = nullptr;
@@ -79,6 +85,10 @@ struct FireworksCrateDesc : StaticPropDesc {
 	// LaunchDuration + this
 	int ShatterAdditionalDelay = 30;
 	int BurstExplosionDuration = 90;
+
+	float FallAcceleration = 200.0f;
+	float MaxFallSpeed = 800.0f;
+	float DropHeightOffset = 400.0f;
 
 	std::array<RGBA, 13> BurstColours = {{
 		// Warm tones

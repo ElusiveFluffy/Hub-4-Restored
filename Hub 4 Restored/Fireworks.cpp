@@ -11,6 +11,8 @@
 //TygerMemory
 #include "sound.h"
 
+#include <algorithm>
+
 ModuleInfo<FireworksCrate> FireworksModule{};
 
 void FireworksProp::InitGameObject(KromeIni* globalModel)
@@ -118,6 +120,26 @@ void FireworksCrate::Update()
 
 		break;
 	}
+	case FireworksCrateState::Dropping:
+	{
+		if (VerticalVelocity <= 0 && OriginalYHeight >= pModel->pMatrices->Position.y)
+		{
+			if (BouncesRemaining == 0)
+			{
+				State = FireworksCrateState::Visible;
+				pModel->pMatrices->Position.y = OriginalYHeight;
+				break;
+			}
+			else
+			{
+				VerticalVelocity = BouncesRemaining * 50.0f;
+				BouncesRemaining--;
+			}
+		}
+
+		UpdateFallVelocity();
+		break;
+	}
 	}
 	if (Firework.Burst.Exploding)
 		Firework.Burst.ExplodeUpdate();
@@ -128,6 +150,24 @@ void FireworksCrate::Draw()
 	if (State == FireworksCrateState::Hidden)
 		return;
 	StaticProp::Draw();
+}
+
+void FireworksCrate::UpdateFallVelocity()
+{
+	FireworksCrateDesc* desc = ((FireworksCrateDesc*)pDescriptor);
+
+	const float deltaTime = (1.0f / 60.0f);
+	VerticalVelocity -= desc->FallAcceleration * deltaTime;
+	VerticalVelocity = std::clamp(VerticalVelocity, -desc->MaxFallSpeed, desc->MaxFallSpeed);
+	pModel->pMatrices->Position.y += VerticalVelocity * deltaTime;
+}
+
+void FireworksCrate::DropCrate()
+{
+	State = FireworksCrateState::Dropping;
+	FireworksCrateDesc* desc = ((FireworksCrateDesc*)pDescriptor);
+	OriginalYHeight = pModel->pMatrices->Position.y;
+	pModel->pMatrices->Position.y += desc->DropHeightOffset;
 }
 
 void FireworksCrate::Burn()
@@ -150,7 +190,7 @@ void Fireworks::Init(Model* modelPtr)
 {
 	pModel = modelPtr;
 
-	float PI = 3.141592653589;
+	float PI = 3.141592653589f;
 	for (FireworksParams& fireworkParam : Params)
 	{
 		fireworkParam.SinXOffset = TyRandom::RandomFR(0.0f, 2.0f * PI);
