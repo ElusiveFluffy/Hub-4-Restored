@@ -8,7 +8,7 @@ namespace DebugDraw
 	inline GLuint gVAO = 0, gVBO = 0;
 	inline GLint gMvpLoc = -1, gColorLoc = -1;
 	inline bool gInitialized = false;
-	inline RGB gLineColour = { 0.2f, 0.2, 0.2f };
+	inline RGB gLineColour = { 0.2f, 0.2f, 0.2f };
 
 	GLuint CreateShaderProgram();
 

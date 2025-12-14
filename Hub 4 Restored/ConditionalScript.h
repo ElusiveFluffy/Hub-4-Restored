@@ -20,6 +20,7 @@ enum ConditionIDEnum
     BeenE = 14,
     GateE = 15,
     Always = 16,
+    // vvv New Conditions vvv
     BeenD = 17
 };
 
@@ -27,7 +28,7 @@ struct ConditionalScript
 {
     char _0[0x40];
     char _40[0x14];
-    EventMessage EventMessage[0xa];
+    EventMessage EventMessages[0xa];
     ConditionIDEnum ConditionID;
     bool ExecuteOnStart;
     bool Negative;
