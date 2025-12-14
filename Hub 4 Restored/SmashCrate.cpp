@@ -17,8 +17,6 @@ InitCrateActor_t InitCrateActor;
 //Not 100% sure, but seems to set some things from global.model
 GameObjDescLoad_t InitGlobalModelStats;
 
-GetMKPropRange_t GetMKPropRange;
-
 TyFunctions::VoidFunction_t OriginalCrate_CheckOpals;
 GameObjectMsg_t OriginalCrateMsg;
 GameObjectVoid_t OriginalCrateUpdate;
@@ -32,7 +30,7 @@ void Crate_CheckOpals() {
 	if (*(bool*)(Core::moduleBase + 0x280418)) {
 		CrateMKProp* crateProps[2];
 		//Casts are required for a **, even though it inherits the base struct
-		GetMKPropRange(&SmashCrate::GameObj, (GameObject**)crateProps);
+		GameObj::GetMKPropRange(&SmashCrate::GameObj, (GameObject**)crateProps);
 		CrateMKProp* crate = crateProps[0];
 
 		while (crate < crateProps[1]) {
@@ -53,12 +51,12 @@ void Crate_CheckOpals() {
 			//Hide if all are collected
 			if (crate->OpalCount == totalCollected) {
 				crate->AllOpalsCollected = true;
-				crate->Visible = false;
-				crate->CollisionEnabled = false;
+				crate->State = CrateState::Hidden;
+				crate->collisionInfo.Enabled = false;
 			}
 
 			//Goes to the next instance, + 1 of its struct size
-			crate += 1;
+			++crate;
 		}
 	}
 }
@@ -185,6 +183,4 @@ void SmashCrate::EarlyInit()
 	InitCrateActor = (InitCrateActor_t)(Core::moduleBase + 0x13af00);
 	InitGlobalModelStats = (GameObjDescLoad_t)(Core::moduleBase + 0x13af80);
 	SetPreviousGameObject = (SetPreviousGameObject_t)(Core::moduleBase + 0xf8cb0);
-
-	GetMKPropRange = (GetMKPropRange_t)(Core::moduleBase + 0xf8600);
 }

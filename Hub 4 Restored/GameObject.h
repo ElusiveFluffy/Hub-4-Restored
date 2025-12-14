@@ -176,6 +176,8 @@ struct ModuleInfo : ModuleInfoBase
     }
 };
 
+typedef void(__thiscall* GetMKPropRange_t)(GameObjDesc* gameObjDesc, GameObject* pOutProp[2]);
+
 typedef void(__thiscall* GameObjDescInit_t)(GameObjDesc* gameObjDesc, ModuleInfoBase* moduleInfo, const char* mdlName, const char* aliasName, int searchMask, int flags);
 typedef void(__thiscall* GameObjDescLoad_t)(GameObjDesc* gameObjDesc, KromeIni* pIni);
 inline GameObjDescInit_t DefaultGameObjDescInit;
@@ -203,12 +205,12 @@ struct GameObjDesc : MKPropDescriptor
 
  namespace GameObj
  {
+    inline GetMKPropRange_t GetMKPropRange;
     inline GameObjDesc** PreviousGameObj;
 
     void EarlyInit();
     void APIInit();
 };
 
-typedef void(__thiscall* GetMKPropRange_t)(GameObjDesc* gameObjDesc, GameObject* pOutProp[2]);
 typedef void(__thiscall* SetPreviousGameObject_t)(GameObjDesc** previousGameObjectDesc, GameObjDesc* gameObjectDesc);
 inline SetPreviousGameObject_t SetPreviousGameObject;

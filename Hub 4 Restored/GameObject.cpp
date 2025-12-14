@@ -69,6 +69,8 @@ void GameObj::EarlyInit()
 	DefaultGameObjDescInit = (GameObjDescInit_t)(Core::moduleBase + 0xf8710);
 	DefaultGameObjDescLoad = (GameObjDescLoad_t)(Core::moduleBase + 0xf8800);
 
+	GetMKPropRange = (GetMKPropRange_t)(Core::moduleBase + 0xf8600);
+
 	HookFunctions();
 
 	StaticProps::Init();
