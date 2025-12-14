@@ -15,6 +15,9 @@ namespace ShadowBat
 {
     void InitFunctions();
 
+    // The amount of seconds shadow lies on the ground after falling
+    static inline const float FallDeathExitSeconds = 1.0f;
+
     enum ShadowBatStates {
         ShadowNull,
         StandOnPipe,

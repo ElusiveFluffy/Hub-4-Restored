@@ -20,14 +20,21 @@ Vector4f* __fastcall PipeGetFallingPos(void* pPipe, void* edx, Vector4f* fallPos
 		return Original_PipeGetFallingPos(pPipe, fallPos);
 }
 
-void __fastcall Reset(ShadowBatProp* shadow) {
+void __fastcall Reset(ShadowBatProp* shadowBat) {
 	int hp = 3;
+	const float* fallDeathTimePtr = (const float*)(Core::moduleBase + 0x1f9824);
 	//For the 4 fireworks in the boss fight
 	if (Level::getCurrentLevel() == LevelCode::B4)
+	{
 		hp = 4;
+		fallDeathTimePtr = &ShadowBat::FallDeathExitSeconds;
+
+	}
 
 	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xbf5a8), &hp, 4);
-	Original_Reset(shadow);
+
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xc0e3a), &fallDeathTimePtr, 4);
+	Original_Reset(shadowBat);
 }
 
 void HookFunction() {
