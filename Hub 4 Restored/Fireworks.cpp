@@ -28,6 +28,7 @@ void FireworksCrate::Init(GameObjDesc* pDesc)
 	StaticProp::Init(pDesc);
 	FireworksShatter = Shatter_Add(pModel, 0.349999994f, 0.449999988f, 120);
 	FireworksShatter->OnFire = true;
+	collisionInfo.Enabled = false;
 
 	Firework.Init(pModel);
 }
@@ -72,7 +73,7 @@ void FireworksCrate::Message(MKMessage* pMsg)
 void FireworksCrate::Update()
 {
 	switch (State) {
-	case FireworksCrateState::Visible:
+	case FireworksCrateState::Landed:
 	{
 		if (Rangs::IsCurrentRang(Rangs::Flamerang))
 		{
@@ -126,7 +127,7 @@ void FireworksCrate::Update()
 		{
 			if (BouncesRemaining == 0)
 			{
-				State = FireworksCrateState::Visible;
+				Landed();
 				pModel->pMatrices->Position.y = OriginalYHeight;
 				break;
 			}
@@ -150,6 +151,12 @@ void FireworksCrate::Draw()
 	if (State == FireworksCrateState::Hidden)
 		return;
 	StaticProp::Draw();
+}
+
+void FireworksCrate::Landed()
+{
+	State = FireworksCrateState::Landed;
+	collisionInfo.Enabled = true;
 }
 
 void FireworksCrate::UpdateFallVelocity()

@@ -7,7 +7,7 @@
 
 enum class FireworksCrateState {
 	Hidden,
-	Visible,
+	Landed,
 	Burning,
 	Dropping
 };
@@ -63,6 +63,7 @@ struct FireworksCrate : StaticProp {
 	void Update() override;
 	void Draw() override;
 
+	void Landed();
 	void UpdateFallVelocity();
 	void DropCrate();
 

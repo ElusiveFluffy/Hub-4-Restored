@@ -91,7 +91,7 @@ void __fastcall Reset(ShadowBatProp* shadowBat) {
 		else
 		{
 			FireworksCrate* crateProps = (FireworksCrate*)FireworksProp::FireworksDesc.pInstances;
-			crateProps[hp - 1].State = FireworksCrateState::Visible;
+			crateProps[hp - 1].Landed();
 		}
 	}
 
