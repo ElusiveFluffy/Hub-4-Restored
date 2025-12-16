@@ -34,7 +34,8 @@ struct LODManager
 #pragma pack(push, 4)
 struct StaticProp : GameObject
 {
-    bool Collide;
+    // Maybe???
+    int StaticPropFlags;
     CollisionInfo collisionInfo;
     LODManager Manager;
 

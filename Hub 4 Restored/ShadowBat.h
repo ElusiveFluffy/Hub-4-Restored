@@ -66,7 +66,6 @@ struct ShadowBatProp : EnemyObject
     Vector4f FallStartPos;
     Vector4f FallPosition;
     UniformSpline SplinePoints;
-    char _47d[3];
     char _480[4];
     char _484[4];
     char _488[4];

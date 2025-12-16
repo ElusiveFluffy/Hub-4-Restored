@@ -16,6 +16,40 @@ PipeGetFallingPos_t Original_PipeGetFallingPos;
 ShadowFastcall_t Original_FlyToNextPipeInit;
 ShadowFastcall_t Original_Reset;
 
+// Just hook these bull functions, 
+// as its much simpler then trying to recreate the logic to display the map icon
+typedef Vector4f* (*Bull_GetPos_t)();
+typedef Material* (*Bull_GetMat_t)();
+
+Bull_GetPos_t Original_Bull_GetPos;
+Bull_GetMat_t Original_Bull_GetMat;
+
+Vector4f* ShadowBat_GetPos() {
+	if (Vector4f* bullPos = Original_Bull_GetPos())
+		return bullPos;
+
+	ShadowBatProp* shadow = ShadowBatProp::GetShadowBat();
+	// If shadow is active
+	if (shadow && shadow->StaticPropFlags & 3) {
+		return &shadow->pLocalToWorld->Position;
+	}
+
+	return nullptr;
+}
+
+Material* ShadowBat_GetMat() {
+	if (Material* bullMat = Original_Bull_GetMat())
+		return bullMat;
+
+	ShadowBatProp* shadow = ShadowBatProp::GetShadowBat();
+	// If shadow is active
+	if (shadow && shadow->StaticPropFlags & 3) {
+		return shadow->ShadowCameoMat;
+	}
+
+	return nullptr;
+}
+
 void __fastcall FlyToNextPipeInit(ShadowBatProp* shadowBat) {
 	if (shadowBat->Health <= 0)
 		return;
@@ -84,6 +118,19 @@ void HookFunction() {
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
 		API::LogPluginMessage("Failed to Create Shadow's Reset Function Hook, With the Error: " + error, Error);
+		return;
+	}
+
+	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x8dc70), &ShadowBat_GetPos, reinterpret_cast<LPVOID*>(&Original_Bull_GetPos));
+	if (minHookStatus != MH_OK) {
+		std::string error = MH_StatusToString(minHookStatus);
+		API::LogPluginMessage("Failed to Create Shadow's Get Pos Function Hook, With the Error: " + error, Error);
+		return;
+	}
+	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0x8dc20), &ShadowBat_GetMat, reinterpret_cast<LPVOID*>(&Original_Bull_GetMat));
+	if (minHookStatus != MH_OK) {
+		std::string error = MH_StatusToString(minHookStatus);
+		API::LogPluginMessage("Failed to Create Shadow's Get Mat Function Hook, With the Error: " + error, Error);
 		return;
 	}
 }
