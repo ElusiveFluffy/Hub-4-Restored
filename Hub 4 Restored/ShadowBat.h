@@ -8,20 +8,12 @@
 //TygerMemory
 #include "vector4f.h"
 
-struct ExtraShadowBatEvents {
-    int MaxHP = 0;
-    EventMessage OnDamage1;
-    EventMessage OnDamage2;
-    EventMessage OnDamage3;
-};
-
 namespace ShadowBat
 {
     void InitFunctions();
 
     // The amount of seconds shadow lies on the ground after falling
     static inline const float FallDeathExitSeconds = 1.0f;
-    static inline ExtraShadowBatEvents ExtraEvents{};
 
     enum ShadowBatStates {
         ShadowNull,
@@ -48,14 +40,13 @@ enum ShadowBatActionState
     Movement = 0x2
 };
 
-TIGHT_PACK_BEGIN
 struct ShadowBatProp : EnemyObject
 {
     char _308[0x38];
     char _340[0x40];
     char _380[0x10];
     char _390[4];
-    BOOL NoStateManager;
+    bool NoStateManager;
     char _398[4];
     char _39c[0x24];
     char _3c0[0x40];
@@ -160,8 +151,12 @@ struct ShadowBatProp : EnemyObject
     EventMessage OnDefeated;
     void* SoundBank;
     Material* ShadowCameoMat;
+    // vvv New extra variables (their default values won't get set, so set it on init) vvv
+    int MaxHP;
+    EventMessage OnDamage1;
+    EventMessage OnDamage2;
+    EventMessage OnDamage3;
 
     void Damage();
     static ShadowBatProp* GetShadowBat();
 };
-TIGHT_PACK_END

@@ -16,7 +16,6 @@ typedef bool(__thiscall* ShadowLoadLine_t)(ShadowBatProp* shadowBat, KromeIniLin
 PipeGetFallingPos_t Original_PipeGetFallingPos;
 ShadowThiscall_t Original_FlyToNextPipeInit;
 ShadowThiscall_t Original_Reset;
-ShadowThiscall_t Original_Deinit;
 ShadowLoadLine_t Original_LoadLine;
 GameObjectInit_t Original_Init;
 GameObjectMsg_t Original_Message;
@@ -65,50 +64,42 @@ void __fastcall FlyToNextPipeInit(ShadowBatProp* shadowBat) {
 	else
 	{
 		// So the damage events increment up as more damage is taken
-		switch (ShadowBat::ExtraEvents.MaxHP - shadowBat->Health) {
+		switch (shadowBat->MaxHP - shadowBat->Health) {
 		case 1:
-			ShadowBat::ExtraEvents.OnDamage1.Send();
+			shadowBat->OnDamage1.Send();
 			break;
 		case 2:
-			ShadowBat::ExtraEvents.OnDamage2.Send();
+			shadowBat->OnDamage2.Send();
 			break;
 		case 3:
-			ShadowBat::ExtraEvents.OnDamage3.Send();
+			shadowBat->OnDamage3.Send();
 			break;
 		}
 	}
 	Original_FlyToNextPipeInit(shadowBat);
 }
 
-void __fastcall ShadowInit(GameObject* shadowBat, void* edx, GameObjDesc* pDesc) {
+void __fastcall ShadowInit(ShadowBatProp* shadowBat, void* edx, GameObjDesc* pDesc) {
 	Original_Init(shadowBat, pDesc);
-	ShadowBat::ExtraEvents.OnDamage1.Init();
-	ShadowBat::ExtraEvents.OnDamage2.Init();
-	ShadowBat::ExtraEvents.OnDamage3.Init();
+	shadowBat->OnDamage1.Init();
+	shadowBat->OnDamage2.Init();
+	shadowBat->OnDamage3.Init();
 }
 
-void __fastcall ShadowDeinit(ShadowBatProp* shadowBat) {
-	Original_Deinit(shadowBat);
-	// Just to make sure not to leave any dangling pointers behind
-	ShadowBat::ExtraEvents.OnDamage1.Init();
-	ShadowBat::ExtraEvents.OnDamage2.Init();
-	ShadowBat::ExtraEvents.OnDamage3.Init();
-}
-
-void __fastcall ShadowMessage(GameObject* shadowBat, void* edx, MKMessage* msg) {
+void __fastcall ShadowMessage(ShadowBatProp* shadowBat, void* edx, MKMessage* msg) {
 	if (msg->MsgID == MSG_Resolve) {
-		ShadowBat::ExtraEvents.OnDamage1.Resolve();
-		ShadowBat::ExtraEvents.OnDamage2.Resolve();
-		ShadowBat::ExtraEvents.OnDamage3.Resolve();
+		shadowBat->OnDamage1.Resolve();
+		shadowBat->OnDamage2.Resolve();
+		shadowBat->OnDamage3.Resolve();
 	}
 	Original_Message(shadowBat, msg);
 }
 
 bool __fastcall LoadLine(ShadowBatProp* shadowBat, void* edx, KromeIniLine* pLine) {
 	// Run the original if the field is none of the on damage fields
-	if (!ShadowBat::ExtraEvents.OnDamage1.LoadLine(pLine, "OnDamage1") &&
-		!ShadowBat::ExtraEvents.OnDamage2.LoadLine(pLine, "OnDamage2") &&
-		!ShadowBat::ExtraEvents.OnDamage3.LoadLine(pLine, "OnDamage3"))
+	if (!shadowBat->OnDamage1.LoadLine(pLine, "OnDamage1") &&
+		!shadowBat->OnDamage2.LoadLine(pLine, "OnDamage2") &&
+		!shadowBat->OnDamage3.LoadLine(pLine, "OnDamage3"))
 		return Original_LoadLine(shadowBat, pLine);
 
 	return true;
@@ -125,16 +116,16 @@ Vector4f* __fastcall PipeGetFallingPos(void* pPipe, void* edx, Vector4f* fallPos
 }
 
 void __fastcall Reset(ShadowBatProp* shadowBat) {
-	ShadowBat::ExtraEvents.MaxHP = 3;
+	shadowBat->MaxHP = 3;
 	const float* fallDeathTimePtr = (const float*)(Core::moduleBase + 0x1f9824);
 	// For the 4 fireworks in the boss fight
 	if (Level::getCurrentLevel() == LevelCode::B4)
 	{
-		ShadowBat::ExtraEvents.MaxHP = 4;
+		shadowBat->MaxHP = 4;
 		fallDeathTimePtr = &ShadowBat::FallDeathExitSeconds;
 	}
 
-	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xbf5a8), &ShadowBat::ExtraEvents.MaxHP, 4);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xbf5a8), &shadowBat->MaxHP, 4);
 
 	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xc0e3a), &fallDeathTimePtr, 4);
 	Original_Reset(shadowBat);
@@ -171,12 +162,6 @@ void HookFunction() {
 		API::LogPluginMessage("Failed to Create Shadow's Init Function Hook, With the Error: " + error, Error);
 		return;
 	}
-	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0xbf240), &ShadowDeinit, reinterpret_cast<LPVOID*>(&Original_Deinit));
-	if (minHookStatus != MH_OK) {
-		std::string error = MH_StatusToString(minHookStatus);
-		API::LogPluginMessage("Failed to Create Shadow's Deinit Function Hook, With the Error: " + error, Error);
-		return;
-	}
 	minHookStatus = MH_CreateHook((LPVOID*)(Core::moduleBase + 0xbf2a0), &LoadLine, reinterpret_cast<LPVOID*>(&Original_LoadLine));
 	if (minHookStatus != MH_OK) {
 		std::string error = MH_StatusToString(minHookStatus);
@@ -205,6 +190,10 @@ void ShadowBat::InitFunctions()
 	// Gives the B zone talisman instead of the D zone one (no need to change it based on level, since the D zone talisman would be gotten from crikey now)
 	char newZoneComplete = (char)Zone::BZone;
 	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xc1083), &newZoneComplete, 1);
+
+	// Extend shadow's struct for any new variables added to it (won't set any of the default values for the extra variables, they'll just be garbage values)
+	int newShadowBatStructSize = sizeof(ShadowBatProp);
+	Core::SetReadOnlyValue((void*)(Core::moduleBase + 0xbef78), &newShadowBatStructSize, 4);
 }
 
 void ShadowBatProp::Damage()
