@@ -51,21 +51,37 @@ void FireworksCrate::Deinit()
 
 void FireworksCrate::Message(MKMessage* pMsg)
 {
-	if (pMsg->MsgID == MSG_BoomerangMsg && State != FireworksCrateState::Burning && ((BoomerangMKMessage*)pMsg)->HitRang->RangIndex == Rangs::Flamerang) {
-		State = FireworksCrateState::Burning;
+	switch (pMsg->MsgID)
+	{
+	case MSG_BoomerangMsg:
+	{
+		if (State != FireworksCrateState::Burning && ((BoomerangMKMessage*)pMsg)->HitRang->RangIndex == Rangs::Flamerang) {
+			State = FireworksCrateState::Burning;
 
-		if (!FireParticleSys) {
-			BoundingVolume* volume = pModel->GetBoundingVolume(-1);
-			ParticleFunctions::Particle_Fire_Init(&FireParticleSys, &pModel->Matrices[0].Position, volume, 3.0f, true);
+			if (!FireParticleSys) {
+				BoundingVolume* volume = pModel->GetBoundingVolume(-1);
+				ParticleFunctions::Particle_Fire_Init(&FireParticleSys, &pModel->Matrices[0].Position, volume, 3.0f, true);
+			}
+
+			if (!FireGlowParticleSys) {
+				BoundingVolume* volume = pModel->GetBoundingVolume(-1);
+				ParticleFunctions::Particle_Fire_Init(&FireGlowParticleSys, &pModel->Matrices[0].Position, volume, 3.0f, false);
+			}
+
+			Sound::PlayTySoundByIndex(GlobalSound::FireworksIgnite, &pModel->Matrices[0].Position, 0);
+			Sound::PlayTySoundByIndex(GlobalSound::FireworksLaunch, &pModel->Matrices[0].Position, 0);
 		}
-
-		if (!FireGlowParticleSys) {
-			BoundingVolume* volume = pModel->GetBoundingVolume(-1);
-			ParticleFunctions::Particle_Fire_Init(&FireGlowParticleSys, &pModel->Matrices[0].Position, volume, 3.0f, false);
-		}
-
-		Sound::PlayTySoundByIndex(GlobalSound::FireworksIgnite, &pModel->Matrices[0].Position, 0);
-		Sound::PlayTySoundByIndex(GlobalSound::FireworksLaunch, &pModel->Matrices[0].Position, 0);
+		break;
+	}
+	case MSG_Activate: 
+	{
+		DropCrate();
+		break;
+	}
+	case MSG_Show:
+	{
+		Landed();
+	}
 	}
 	GameObject::Message(pMsg);
 }

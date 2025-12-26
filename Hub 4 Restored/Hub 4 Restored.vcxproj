@@ -223,6 +223,7 @@
   <ItemGroup>
     <ClCompile Include="CustomTyDev.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
+    <ClCompile Include="EventMessage.cpp" />
     <ClCompile Include="ParticleFunctions.cpp" />
     <ClCompile Include="Fireworks.cpp" />
     <ClCompile Include="Flamerang.cpp" />

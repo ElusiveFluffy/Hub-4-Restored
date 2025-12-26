@@ -8,12 +8,20 @@
 //TygerMemory
 #include "vector4f.h"
 
+struct ExtraShadowBatEvents {
+    int MaxHP = 0;
+    EventMessage OnDamage1;
+    EventMessage OnDamage2;
+    EventMessage OnDamage3;
+};
+
 namespace ShadowBat
 {
     void InitFunctions();
 
     // The amount of seconds shadow lies on the ground after falling
     static inline const float FallDeathExitSeconds = 1.0f;
+    static inline ExtraShadowBatEvents ExtraEvents{};
 
     enum ShadowBatStates {
         ShadowNull,

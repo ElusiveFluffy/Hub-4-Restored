@@ -2,6 +2,7 @@
 #include "sound.h"
 #include "colour.h"
 
+typedef int BOOL;
 namespace Rangs
 {
 	enum Boomerangs {

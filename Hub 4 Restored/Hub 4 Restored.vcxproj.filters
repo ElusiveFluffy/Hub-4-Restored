@@ -43,6 +43,9 @@
     <Filter Include="Source Files\TyFunctions">
       <UniqueIdentifier>{75d313f4-48ac-45e7-92af-64649786719f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Structs">
+      <UniqueIdentifier>{3c7e2bd7-8bc8-41c9-9c92-61b77166c08e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -304,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="Material.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EventMessage.cpp">
+      <Filter>Source Files\Structs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
