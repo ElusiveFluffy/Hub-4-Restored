@@ -13,6 +13,7 @@
 #include "Options.h"
 #include "MKMemory.h"
 #include "MainRenderer.h"
+#include "SlyFight.h"
 
 #include "MinHook.h"
 
@@ -57,6 +58,8 @@ bool PluginCore::Setup()
     CustomTyDev::OverrideTyDev();
 
     GameObj::APIInit();
+
+    SlyFight::DisableSlyShadowChange();
 
     if (!EnableAllHooks())
         return false;

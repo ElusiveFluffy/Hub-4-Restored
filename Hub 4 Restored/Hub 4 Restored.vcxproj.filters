@@ -204,6 +204,9 @@
     <ClInclude Include="ConditionalScript.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="SlyFight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -310,6 +313,9 @@
     </ClCompile>
     <ClCompile Include="EventMessage.cpp">
       <Filter>Source Files\Structs</Filter>
+    </ClCompile>
+    <ClCompile Include="SlyFight.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

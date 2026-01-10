@@ -203,6 +203,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="PluginCore.h" />
     <ClInclude Include="ShatterStruct.h" />
+    <ClInclude Include="SlyFight.h" />
     <ClInclude Include="TightStructPacker.h" />
     <ClInclude Include="TyPropFunctions.h" />
     <ClInclude Include="Rangs.h" />
@@ -249,6 +250,7 @@
     </ClCompile>
     <ClCompile Include="PluginCore.cpp" />
     <ClCompile Include="ShatterStruct.cpp" />
+    <ClCompile Include="SlyFight.cpp" />
     <ClCompile Include="TyPropFunctions.cpp" />
     <ClCompile Include="Rangs.cpp" />
     <ClCompile Include="SaveFile.cpp" />
